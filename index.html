@@ -194,7 +194,6 @@
           <input class="field" id="loginUsername" placeholder="Username">
           <input class="field" id="loginPassword" type="password" placeholder="Password">
           <button class="btn full" onclick="login()">เข้าสู่ระบบ</button>
-          <p class="muted" style="margin-top:10px;">แอดมินทดลอง: admin / 1234</p>
         </div>
 
         <div id="registerForm" class="hidden">
@@ -465,6 +464,8 @@
     let calcStore = {};
     let remoteReady = false;
     let saveTimer = null;
+    let suppressHistoryPush = false;
+    const appPages = ["landingPage", "authPage", "memberPage", "renewPage", "paymentHistoryPage", "adminPage"];
 
     function load(key, fallback) {
       try { return JSON.parse(localStorage.getItem(key)) || structuredClone(fallback); }
@@ -548,6 +549,11 @@
       catch (error) { console.warn("Firebase delete payment failed", error); }
     }
 
+    async function deleteRemotePayments(ids) {
+      if (!remoteReady || !ids.length) return;
+      await Promise.all(ids.map(id => deleteRemotePayment(id)));
+    }
+
     function authEmail(username) {
       return `${username.toLowerCase()}@prompt-key.local`;
     }
@@ -596,14 +602,36 @@
     }
 
     function showPage(id) {
-      ["landingPage", "authPage", "memberPage", "renewPage", "paymentHistoryPage", "adminPage"].forEach(page => document.getElementById(page).classList.add("hidden"));
+      appPages.forEach(page => document.getElementById(page).classList.add("hidden"));
       document.getElementById(id).classList.remove("hidden");
+      updatePageHistory(id);
       renderNav();
       if (id === "landingPage") renderLanding();
       if (id === "memberPage") renderMember();
       if (id === "renewPage") renderRenewPage();
       if (id === "paymentHistoryPage") renderPaymentHistoryPage();
       if (id === "adminPage") renderAdmin();
+    }
+
+    function updatePageHistory(id) {
+      if (suppressHistoryPush || !appPages.includes(id)) return;
+      const targetHash = `#${id}`;
+      if (location.hash === targetHash) {
+        history.replaceState({ page: id }, "", targetHash);
+      } else {
+        history.pushState({ page: id }, "", targetHash);
+      }
+    }
+
+    function pageFromHash() {
+      const hashPage = location.hash.replace("#", "");
+      return appPages.includes(hashPage) ? hashPage : "";
+    }
+
+    function showPageFromHistory(id) {
+      suppressHistoryPush = true;
+      showPage(id);
+      suppressHistoryPush = false;
     }
 
     function renderNav() {
@@ -759,6 +787,7 @@
 
     function renderRenewPage() {
       currentUser = users[currentUser.username];
+      selectedPackageId = null;
       document.getElementById("memberPackages").innerHTML = packages.map(pkg => `
         <div class="card">
           <h3>${pkg.name}</h3>
@@ -782,6 +811,25 @@
     function selectPackage(packageId) {
       selectedPackageId = packageId;
       const pkg = getPackage(packageId);
+      document.getElementById("paymentPanel").innerHTML = `
+        <div class="card" style="box-shadow:none;">
+          <h3>ยืนยันแพ็กเกจ</h3>
+          <p class="muted">ตรวจสอบแพ็กเกจก่อนแสดง QR สำหรับโอนเงิน</p>
+          <div class="price">${pkg.price.toLocaleString()}฿</div>
+          <p><strong>${pkg.name}</strong> / ${pkg.days} วัน</p>
+          <button class="btn green full" style="margin-top:12px;" onclick="confirmPackagePayment()">ยืนยันสมัคร / ต่ออายุ</button>
+          <button class="btn gray full" style="margin-top:10px;" onclick="cancelPackagePayment()">เลือกแพ็กเกจใหม่</button>
+        </div>`;
+    }
+
+    function cancelPackagePayment() {
+      selectedPackageId = null;
+      document.getElementById("paymentPanel").innerHTML = "เลือกแพ็กเกจก่อน ระบบจะแสดง QR และยอดชำระ";
+    }
+
+    function confirmPackagePayment() {
+      if (!selectedPackageId) return alert("กรุณาเลือกแพ็กเกจก่อน");
+      const pkg = getPackage(selectedPackageId);
       const qrFile = getQrByPrice(pkg.price);
       const qrHtml = qrFile
         ? `<a class="qr-link" href="${qrFile}" target="_blank" rel="noopener" title="เปิด QR ขนาดใหญ่"><img class="qr-img" src="${qrFile}" alt="QR พร้อมเพย์ ${pkg.price.toLocaleString()} บาท"></a>`
@@ -800,6 +848,7 @@
             <input class="field" id="slipFile" type="file" accept="image/*" onchange="previewSelectedSlip()">
             <img class="slip-thumb" id="selectedSlipPreview" alt="ตัวอย่างสลิปที่เลือก">
             <button class="btn green" onclick="uploadSlip()">อัปโหลดสลิป</button>
+            <button class="btn gray" style="margin-left:8px;" onclick="selectPackage('${pkg.id}')">ย้อนกลับ</button>
           </div>
         </div>`;
     }
@@ -1213,7 +1262,7 @@
       const rows = Object.values(users).filter(u => u.role !== "admin").filter(u => `${u.username} ${u.name} ${u.phone} ${u.line}`.toLowerCase().includes(keyword));
       document.getElementById("memberRows").innerHTML = rows.map(u => `
         <tr><td><button class="member-link" onclick="openMemberDetail('${u.username}')">${u.username}</button></td><td>${u.name || "-"}</td><td>${u.phone || "-"}</td><td>${u.line || "-"}</td><td>${getPackage(u.packageId)?.name || "-"}</td><td>${u.expire || "-"}</td><td><span class="badge ${memberStatus(u)}">${memberStatus(u)}</span></td>
-        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small red" onclick="suspendMember('${u.username}')">ระงับ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
+        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small gray" onclick="suspendMember('${u.username}')">ระงับ</button> <button class="btn small red" onclick="deleteMember('${u.username}')">ลบ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
     }
 
     function openMemberDetail(username) {
@@ -1315,6 +1364,22 @@
       saveAll(); renderAdmin(); showToast("ระงับบัญชีแล้ว");
     }
 
+    async function deleteMember(username) {
+      if (users[username]?.role === "admin") return alert("ลบแอดมินหลักไม่ได้");
+      const ok = confirm(`ต้องการลบสมาชิก ${username} ใช่ไหม?\n\nระบบจะลบข้อมูลสมาชิกและประวัติสลิปของคนนี้ออกจากหลังบ้าน`);
+      if (!ok) return;
+      const relatedPayments = payments.filter(payment => payment.username === username);
+      const relatedIds = relatedPayments.map(payment => payment.id);
+      payments = payments.filter(payment => payment.username !== username);
+      delete users[username];
+      await deleteRemotePayments(relatedIds);
+      logAdmin(`ลบสมาชิก ${username} และรายการสลิป ${relatedIds.length} รายการ`);
+      saveAll();
+      clearAdminMemberForm();
+      renderAdmin();
+      showToast("ลบสมาชิกแล้ว");
+    }
+
     function renderCoupons() {
       document.getElementById("couponRows").innerHTML = coupons.map(coupon => `
         <tr><td>${coupon.code}</td><td>${coupon.type === "percent" ? "เปอร์เซ็นต์" : "บาท"}</td><td>${coupon.type === "percent" ? coupon.value + "%" : coupon.value + "฿"}</td><td><button class="btn small red" onclick="deleteCoupon('${coupon.code}')">ลบ</button></td></tr>
@@ -1387,12 +1452,19 @@
         renderLanding();
         renderNav();
         setAuthTab("login");
+        history.replaceState({ page: "landingPage" }, "", "#landingPage");
         return;
       }
 
       currentUser = users[savedUsername];
       setAuthTab("login");
-      showPage(currentUser.role === "admin" ? "adminPage" : "memberPage");
+      const hashPage = pageFromHash();
+      const fallbackPage = currentUser.role === "admin" ? "adminPage" : "memberPage";
+      const allowedPage = currentUser.role === "admin"
+        ? (hashPage === "adminPage" ? hashPage : fallbackPage)
+        : (["memberPage", "renewPage", "paymentHistoryPage"].includes(hashPage) ? hashPage : fallbackPage);
+      history.replaceState({ page: allowedPage }, "", `#${allowedPage}`);
+      showPageFromHistory(allowedPage);
     }
 
     function waitForAuthReady() {
@@ -1409,6 +1481,24 @@
       if (authUser) await loadRemoteData();
       restoreSession();
     }
+
+    window.addEventListener("popstate", () => {
+      const hashPage = pageFromHash();
+      if (!hashPage) return;
+      if (!currentUser && hashPage !== "landingPage" && hashPage !== "authPage") {
+        showPageFromHistory("landingPage");
+        return;
+      }
+      if (currentUser?.role === "admin" && hashPage !== "adminPage") {
+        showPageFromHistory("adminPage");
+        return;
+      }
+      if (currentUser?.role === "member" && !["memberPage", "renewPage", "paymentHistoryPage"].includes(hashPage)) {
+        showPageFromHistory("memberPage");
+        return;
+      }
+      showPageFromHistory(hashPage);
+    });
 
     startApp();
   </script>

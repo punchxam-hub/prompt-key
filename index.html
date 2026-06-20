@@ -267,6 +267,17 @@
       </section>
 
       <div class="grid4" id="memberStats" style="margin-top:16px;"></div>
+
+      <section class="card" style="margin-top:16px;">
+        <h3>เปลี่ยนรหัสผ่าน</h3>
+        <p class="muted" style="margin-bottom:10px;">เปลี่ยนรหัสของบัญชีที่กำลังเข้าสู่ระบบอยู่</p>
+        <div class="grid3">
+          <input class="field" id="memberOldPassword" type="password" placeholder="รหัสเดิม">
+          <input class="field" id="memberNewPassword" type="password" placeholder="รหัสใหม่">
+          <input class="field" id="memberConfirmPassword" type="password" placeholder="ยืนยันรหัสใหม่">
+        </div>
+        <button class="btn green" onclick="changeOwnPassword('memberOldPassword','memberNewPassword','memberConfirmPassword')">บันทึกรหัสใหม่</button>
+      </section>
     </main>
 
     <main id="paymentHistoryPage" class="hidden">
@@ -316,6 +327,17 @@
 
       <div class="notice-grid" id="adminNotices"></div>
       <div class="grid4" id="adminStats"></div>
+
+      <section class="card" style="margin-top:16px;">
+        <h3>เปลี่ยนรหัสแอดมิน</h3>
+        <p class="muted" style="margin-bottom:10px;">เปลี่ยนรหัสของบัญชีแอดมินที่กำลังเข้าสู่ระบบอยู่</p>
+        <div class="grid3">
+          <input class="field" id="adminOldPassword" type="password" placeholder="รหัสเดิม">
+          <input class="field" id="adminNewPassword" type="password" placeholder="รหัสใหม่">
+          <input class="field" id="adminConfirmPassword" type="password" placeholder="ยืนยันรหัสใหม่">
+        </div>
+        <button class="btn green" onclick="changeOwnPassword('adminOldPassword','adminNewPassword','adminConfirmPassword')">บันทึกรหัสใหม่</button>
+      </section>
 
       <div class="grid" style="margin-top:16px;">
         <section class="card">
@@ -571,6 +593,16 @@
       return `${password}::prompt-key`;
     }
 
+    function getDeviceId() {
+      const key = "pk_device_id";
+      let id = localStorage.getItem(key);
+      if (!id) {
+        id = "dev_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        localStorage.setItem(key, id);
+      }
+      return id;
+    }
+
     async function signInAuth(username, password) {
       const email = authEmail(username);
       const secret = authPassword(password);
@@ -592,6 +624,25 @@
       Object.keys(users).forEach(username => {
         users[username] = publicUser(users[username]);
       });
+    }
+
+    async function changeOwnPassword(oldId, newId, confirmId) {
+      const oldPassword = document.getElementById(oldId).value.trim();
+      const newPassword = document.getElementById(newId).value.trim();
+      const confirmPassword = document.getElementById(confirmId).value.trim();
+      if (!currentUser || !auth.currentUser) return alert("กรุณาเข้าสู่ระบบใหม่ก่อนเปลี่ยนรหัส");
+      if (!oldPassword || !newPassword || !confirmPassword) return alert("กรุณากรอกรหัสให้ครบ");
+      if (newPassword !== confirmPassword) return alert("รหัสใหม่และยืนยันรหัสไม่ตรงกัน");
+      if (newPassword.length < 4) return alert("รหัสใหม่ควรมีอย่างน้อย 4 ตัวอักษร");
+      try {
+        const credential = firebase.auth.EmailAuthProvider.credential(authEmail(currentUser.username), authPassword(oldPassword));
+        await auth.currentUser.reauthenticateWithCredential(credential);
+        await auth.currentUser.updatePassword(authPassword(newPassword));
+        [oldId, newId, confirmId].forEach(id => document.getElementById(id).value = "");
+        showToast("เปลี่ยนรหัสผ่านแล้ว");
+      } catch (error) {
+        alert("เปลี่ยนรหัสไม่สำเร็จ กรุณาตรวจรหัสเดิมอีกครั้ง");
+      }
     }
 
     function showToast(text) {
@@ -721,6 +772,14 @@
       const userKey = findUsernameKey(username);
       const user = users[userKey];
       if (!user) return alert("ไม่พบข้อมูลสมาชิก กรุณาสมัครสมาชิกก่อน");
+      const deviceId = getDeviceId();
+      if (user.role !== "admin") {
+        if (user.deviceId && user.deviceId !== deviceId) {
+          await auth.signOut().catch(() => {});
+          return alert("บัญชีนี้ผูกกับเครื่องอื่นแล้ว กรุณาติดต่อแอดมินเพื่อปลดเครื่อง");
+        }
+        if (!user.deviceId) user.deviceId = deviceId;
+      }
       user.lastLogin = new Date().toLocaleString("th-TH");
       user.lastIp = "local";
       currentUser = user;
@@ -1262,7 +1321,7 @@
       const rows = Object.values(users).filter(u => u.role !== "admin").filter(u => `${u.username} ${u.name} ${u.phone} ${u.line}`.toLowerCase().includes(keyword));
       document.getElementById("memberRows").innerHTML = rows.map(u => `
         <tr><td><button class="member-link" onclick="openMemberDetail('${u.username}')">${u.username}</button></td><td>${u.name || "-"}</td><td>${u.phone || "-"}</td><td>${u.line || "-"}</td><td>${getPackage(u.packageId)?.name || "-"}</td><td>${u.expire || "-"}</td><td><span class="badge ${memberStatus(u)}">${memberStatus(u)}</span></td>
-        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small gray" onclick="suspendMember('${u.username}')">ระงับ</button> <button class="btn small red" onclick="deleteMember('${u.username}')">ลบ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
+        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small" onclick="resetMemberDevice('${u.username}')">ปลดเครื่อง</button> <button class="btn small gray" onclick="suspendMember('${u.username}')">ระงับ</button> <button class="btn small red" onclick="deleteMember('${u.username}')">ลบ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
     }
 
     function openMemberDetail(username) {
@@ -1285,6 +1344,7 @@
             <div>แพ็กเกจ: ${getPackage(user.packageId)?.name || "-"}</div>
             <div>หมดอายุ: ${user.expire || "-"}</div>
             <div>สถานะ: ${memberStatus(user)}</div>
+            <div>เครื่องที่ผูก: ${user.deviceId ? "ผูกแล้ว" : "ยังไม่ผูกเครื่อง"}</div>
             <div>เครดิตแนะนำเพื่อน: ${user.credit || 0} บาท</div>
             <div>ลิงก์ส่วนตัว: ?ref=${user.refCode || username}</div>
           </div></div>
@@ -1362,6 +1422,17 @@
       users[username].status = "suspended";
       logAdmin(`ระงับบัญชี ${username}`);
       saveAll(); renderAdmin(); showToast("ระงับบัญชีแล้ว");
+    }
+
+    function resetMemberDevice(username) {
+      if (!users[username]) return;
+      const ok = confirm(`ปลดเครื่องของ ${username} ใช่ไหม?\n\nหลังปลดแล้ว ลูกค้าจะล็อกอินด้วยเครื่องใหม่ได้ 1 เครื่อง`);
+      if (!ok) return;
+      users[username].deviceId = "";
+      logAdmin(`ปลดเครื่อง ${username}`);
+      saveAll();
+      renderAdmin();
+      showToast("ปลดเครื่องแล้ว");
     }
 
     async function deleteMember(username) {

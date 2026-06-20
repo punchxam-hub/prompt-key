@@ -421,6 +421,7 @@
   <div class="toast" id="toast">บันทึกแล้ว</div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
   <script>
     const firebaseConfig = {
@@ -434,6 +435,7 @@
     };
 
     const firebaseApp = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.firestore();
 
     const defaultPackages = [
@@ -470,6 +472,7 @@
     }
 
     function saveAll() {
+      cleanUsersForSave();
       localStorage.setItem("rn_packages", JSON.stringify(packages));
       localStorage.setItem("rn_users", JSON.stringify(users));
       localStorage.setItem("rn_payments", JSON.stringify(payments));
@@ -481,7 +484,9 @@
     }
 
     function stateData() {
-      return { packages, users, usageHistory, coupons, adminLogs, announcement, updatedAt: new Date().toISOString() };
+      const cleanUsers = {};
+      Object.keys(users).forEach(username => cleanUsers[username] = publicUser(users[username]));
+      return { packages, users: cleanUsers, usageHistory, coupons, adminLogs, announcement, updatedAt: new Date().toISOString() };
     }
 
     async function loadRemoteData() {
@@ -543,6 +548,38 @@
       catch (error) { console.warn("Firebase delete payment failed", error); }
     }
 
+    function authEmail(username) {
+      return `${username.toLowerCase()}@prompt-key.local`;
+    }
+
+    function authPassword(password) {
+      return `${password}::prompt-key`;
+    }
+
+    async function signInOrCreateAuth(username, password) {
+      const email = authEmail(username);
+      const secret = authPassword(password);
+      try {
+        return await auth.signInWithEmailAndPassword(email, secret);
+      } catch (error) {
+        if (error.code === "auth/user-not-found") {
+          return await auth.createUserWithEmailAndPassword(email, secret);
+        }
+        throw error;
+      }
+    }
+
+    function publicUser(user) {
+      const { password, ...clean } = user;
+      return clean;
+    }
+
+    function cleanUsersForSave() {
+      Object.keys(users).forEach(username => {
+        users[username] = publicUser(users[username]);
+      });
+    }
+
     function showToast(text) {
       const toast = document.getElementById("toast");
       toast.textContent = text;
@@ -594,7 +631,7 @@
       document.getElementById("registerForm").classList.toggle("hidden", tab !== "register");
     }
 
-    function register() {
+    async function register() {
       const username = document.getElementById("regUsername").value.trim();
       const password = document.getElementById("regPassword").value.trim();
       const name = document.getElementById("regName").value.trim();
@@ -602,31 +639,48 @@
       const line = document.getElementById("regLine").value.trim();
       if (!username || !password || !name || !phone || !line) return alert("กรุณากรอกข้อมูลให้ครบ");
       if (!/^[a-zA-Z0-9_-]+$/.test(username)) return alert("Username ใช้ได้เฉพาะอังกฤษ ตัวเลข _ และ -");
-      if (users[username]) return alert("Username นี้ถูกใช้แล้ว");
-      users[username] = { username, password, role: "member", name, phone, line, status: "pending", packageId: "", expire: "", createdAt: todayText(), lastLogin: "", lastIp: "local", credit: 0, refCode: username };
+      try {
+        await auth.createUserWithEmailAndPassword(authEmail(username), authPassword(password));
+        await loadRemoteData();
+        if (users[username]) return alert("Username นี้ถูกใช้แล้ว");
+      } catch (error) {
+        if (error.code === "auth/email-already-in-use") return alert("Username นี้ถูกใช้แล้วในระบบล็อกอิน");
+        return alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
+      }
+      users[username] = { username, role: "member", name, phone, line, status: "pending", packageId: "", expire: "", createdAt: todayText(), lastLogin: "", lastIp: "local", credit: 0, refCode: username };
+      cleanUsersForSave();
       saveAll();
       showToast("สมัครสมาชิกแล้ว กรุณาเข้าสู่ระบบและเลือกแพ็กเกจ");
       setAuthTab("login");
       document.getElementById("loginUsername").value = username;
     }
 
-    function login() {
+    async function login() {
       const username = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
+      if (!username || !password) return alert("กรุณากรอก Username และ Password");
+      try {
+        await signInOrCreateAuth(username, password);
+        await loadRemoteData();
+      } catch (error) {
+        return alert("Username หรือ Password ไม่ถูกต้อง");
+      }
       const user = users[username];
-      if (!user || user.password !== password) return alert("Username หรือ Password ไม่ถูกต้อง");
+      if (!user) return alert("ไม่พบข้อมูลสมาชิก กรุณาสมัครสมาชิกก่อน");
       user.lastLogin = new Date().toLocaleString("th-TH");
       user.lastIp = "local";
       currentUser = user;
       localStorage.setItem("rn_current_user", username);
+      cleanUsersForSave();
       saveAll();
       showToast("เข้าสู่ระบบแล้ว");
       showPage(user.role === "admin" ? "adminPage" : "memberPage");
     }
 
-    function logout() {
+    async function logout() {
       currentUser = null;
       localStorage.removeItem("rn_current_user");
+      try { await auth.signOut(); } catch {}
       showToast("ออกจากระบบแล้ว");
       showPage("landingPage");
     }
@@ -1311,8 +1365,18 @@
       showPage(currentUser.role === "admin" ? "adminPage" : "memberPage");
     }
 
+    function waitForAuthReady() {
+      return new Promise(resolve => {
+        const stop = auth.onAuthStateChanged(user => {
+          stop();
+          resolve(user);
+        });
+      });
+    }
+
     async function startApp() {
-      await loadRemoteData();
+      const authUser = await waitForAuthReady();
+      if (authUser) await loadRemoteData();
       restoreSession();
     }
 

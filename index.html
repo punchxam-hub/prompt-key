@@ -420,7 +420,22 @@
 
   <div class="toast" id="toast">บันทึกแล้ว</div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCn5gcJIRgJedry5CBWMyDOhMPXnlfJJwM",
+      authDomain: "prompt-key-d1829.firebaseapp.com",
+      projectId: "prompt-key-d1829",
+      storageBucket: "prompt-key-d1829.firebasestorage.app",
+      messagingSenderId: "100030376916",
+      appId: "1:100030376916:web:dfde61893c6bd3ff980441",
+      measurementId: "G-DR0J980KYL"
+    };
+
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const defaultPackages = [
       { id: "p1", name: "1 เดือน", days: 30, price: 159 },
       { id: "p3", name: "3 เดือน", days: 90, price: 399 },
@@ -446,6 +461,8 @@
     let currentUser = null;
     let selectedPackageId = null;
     let calcStore = {};
+    let remoteReady = false;
+    let saveTimer = null;
 
     function load(key, fallback) {
       try { return JSON.parse(localStorage.getItem(key)) || structuredClone(fallback); }
@@ -460,6 +477,70 @@
       localStorage.setItem("rn_coupons", JSON.stringify(coupons));
       localStorage.setItem("rn_admin_logs", JSON.stringify(adminLogs));
       localStorage.setItem("rn_announcement", JSON.stringify(announcement));
+      queueRemoteSave();
+    }
+
+    function stateData() {
+      return { packages, users, usageHistory, coupons, adminLogs, announcement, updatedAt: new Date().toISOString() };
+    }
+
+    async function loadRemoteData() {
+      try {
+        const stateRef = db.collection("app").doc("state");
+        const stateSnap = await stateRef.get();
+        if (stateSnap.exists) {
+          const data = stateSnap.data();
+          packages = data.packages || defaultPackages;
+          users = data.users || defaultUsers;
+          usageHistory = data.usageHistory || [];
+          coupons = data.coupons || coupons;
+          adminLogs = data.adminLogs || [];
+          announcement = data.announcement || announcement;
+        } else {
+          await stateRef.set(stateData());
+        }
+
+        const paymentSnap = await db.collection("payments").get();
+        payments = paymentSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        remoteReady = true;
+        persistLocalOnly();
+      } catch (error) {
+        console.warn("Firebase load failed, using local data", error);
+        remoteReady = false;
+        showToast("เชื่อมฐานข้อมูลไม่ได้ ใช้ข้อมูลในเครื่องชั่วคราว");
+      }
+    }
+
+    function persistLocalOnly() {
+      localStorage.setItem("rn_packages", JSON.stringify(packages));
+      localStorage.setItem("rn_users", JSON.stringify(users));
+      localStorage.setItem("rn_payments", JSON.stringify(payments));
+      localStorage.setItem("rn_usage", JSON.stringify(usageHistory));
+      localStorage.setItem("rn_coupons", JSON.stringify(coupons));
+      localStorage.setItem("rn_admin_logs", JSON.stringify(adminLogs));
+      localStorage.setItem("rn_announcement", JSON.stringify(announcement));
+    }
+
+    function queueRemoteSave() {
+      if (!remoteReady) return;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        saveRemoteData().catch(error => {
+          console.warn("Firebase save failed", error);
+          showToast("บันทึกขึ้นฐานข้อมูลไม่สำเร็จ");
+        });
+      }, 250);
+    }
+
+    async function saveRemoteData() {
+      await db.collection("app").doc("state").set(stateData(), { merge: true });
+      await Promise.all(payments.map(payment => db.collection("payments").doc(payment.id).set(payment, { merge: true })));
+    }
+
+    async function deleteRemotePayment(id) {
+      if (!remoteReady) return;
+      try { await db.collection("payments").doc(id).delete(); }
+      catch (error) { console.warn("Firebase delete payment failed", error); }
     }
 
     function showToast(text) {
@@ -656,6 +737,23 @@
       });
     }
 
+    function resizeImageDataUrl(dataUrl, maxWidth = 900, quality = 0.72) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, maxWidth / img.width);
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+    }
+
     function hashText(text) {
       let hash = 0;
       for (let i = 0; i < text.length; i++) {
@@ -702,7 +800,8 @@
       if (!file.type.startsWith("image/")) return alert("กรุณาอัปโหลดไฟล์รูปภาพเท่านั้น");
       const pkg = getPackage(selectedPackageId);
       const preview = document.getElementById("selectedSlipPreview");
-      const slipDataUrl = preview.dataset.dataUrl || await readFileAsDataUrl(file);
+      const rawSlipDataUrl = preview.dataset.dataUrl || await readFileAsDataUrl(file);
+      const slipDataUrl = await resizeImageDataUrl(rawSlipDataUrl);
       const slipHash = hashText(slipDataUrl);
       const duplicate = findDuplicateSlip(slipHash);
       if (duplicate) {
@@ -1023,6 +1122,7 @@
       const pay = payments.find(p => p.id === id);
       payments = payments.filter(p => p.id !== id);
       if (pay) logAdmin(`ลบรายการสลิป ${pay.username}`);
+      deleteRemotePayment(id);
       saveAll();
       showToast("ลบรายการสลิปแล้ว");
       renderAdmin();
@@ -1211,7 +1311,12 @@
       showPage(currentUser.role === "admin" ? "adminPage" : "memberPage");
     }
 
-    restoreSession();
+    async function startApp() {
+      await loadRemoteData();
+      restoreSession();
+    }
+
+    startApp();
   </script>
 </body>
 </html>

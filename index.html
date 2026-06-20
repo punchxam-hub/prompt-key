@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>พร้อมคีย์</title>
+  <meta name="description" content="พร้อมคีย์ เว็บช่วยจัดชุดเลขสำหรับสมาชิก มีระบบสมัครสมาชิก ต่ออายุแพ็กเกจ อัปโหลดสลิป และหลังบ้านแอดมิน">
+  <meta name="keywords" content="พร้อมคีย์, เว็บรันเลข, จัดชุดเลข, เลขสมาชิก, เครื่องมือรันเลข, หวย, lottery tool">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="พร้อมคีย์">
+  <meta property="og:description" content="เว็บช่วยจัดชุดเลขสำหรับสมาชิก พร้อมระบบแพ็กเกจ อัปโหลดสลิป และหลังบ้านแอดมิน">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --gold: #f59e0b;
+      --dark: #111827;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Prompt", sans-serif; }
+    body { background: var(--bg); color: var(--text); }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; border: none; }
+    .hidden { display: none !important; }
+    .container { max-width: 1180px; margin: auto; padding: 20px; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo { width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #22c55e, #15803d); color: white; display: grid; place-items: center; font-weight: 800; font-size: 22px; }
+    .brand h1 { font-size: 26px; line-height: 1; }
+    .brand p { color: var(--muted); font-size: 13px; letter-spacing: 1.5px; }
+    .nav-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .btn { padding: 12px 18px; border-radius: 10px; font-weight: 700; color: white; background: var(--blue); }
+    .btn.dark { background: var(--dark); }
+    .btn.green { background: var(--green); }
+    .btn.red { background: var(--red); }
+    .btn.gray { background: #64748b; }
+    .btn.gold { background: var(--gold); color: #111827; }
+    .btn.full { width: 100%; }
+    .btn.small { padding: 8px 11px; font-size: 13px; border-radius: 8px; }
+
+    .hero { min-height: 420px; border-radius: 22px; padding: 34px; background: linear-gradient(135deg, rgba(17, 24, 39, .9), rgba(22, 101, 52, .82)), url("https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1600&q=80"); background-size: cover; background-position: center; color: white; display: grid; align-content: center; box-shadow: var(--shadow); margin-bottom: 22px; }
+    .hero h2 { font-size: clamp(34px, 6vw, 66px); line-height: 1.05; max-width: 820px; }
+    .hero p { margin-top: 16px; color: #dbeafe; font-size: 18px; max-width: 680px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid.single { grid-template-columns: 1fr; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); }
+    .card h3 { margin-bottom: 8px; }
+    .muted { color: var(--muted); }
+    .price { font-size: 34px; font-weight: 800; margin: 10px 0; }
+    .section-title { font-size: 26px; margin: 26px 0 14px; }
+
+    .form { max-width: 480px; margin: 28px auto; }
+    .form h2 { margin-bottom: 12px; }
+    .field { width: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: white; margin-bottom: 10px; outline: none; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+    .tabs button { flex: 1; background: #e5e7eb; color: #111827; padding: 11px; border-radius: 10px; font-weight: 700; }
+    .tabs button.active { background: var(--blue); color: white; }
+
+    .dash-head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 16px; }
+    .stat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); }
+    .stat strong { display: block; font-size: 28px; margin-top: 5px; }
+    .badge { display: inline-block; padding: 5px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; }
+    .badge.active { background: #dcfce7; color: #166534; }
+    .badge.pending { background: #fef3c7; color: #92400e; }
+    .badge.expired, .badge.suspended { background: #fee2e2; color: #991b1b; }
+    .badge.admin { background: #dbeafe; color: #1d4ed8; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    table { width: 100%; border-collapse: collapse; min-width: 820px; }
+    th, td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+    th { background: #f8fafc; }
+    tr:last-child td { border-bottom: none; }
+
+    .payment-box { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: center; }
+    .qr { width: 240px; aspect-ratio: 1; border-radius: 14px; background: #f8fafc; border: 1px solid var(--line); box-shadow: var(--shadow); display: grid; place-items: center; color: #111827; font-weight: 900; text-align: center; overflow: hidden; }
+    .qr span { background: white; padding: 10px; border-radius: 8px; }
+    .qr-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .qr-link { display: block; width: 100%; height: 100%; }
+
+    .calculator textarea { width: 100%; min-height: 105px; padding: 16px; border: 2px solid #111827; border-radius: 12px; font-size: 24px; font-weight: 700; resize: vertical; }
+    .result-box { background: #eef7f2; border-radius: 12px; padding: 14px; min-height: 76px; word-break: break-word; line-height: 1.8; }
+    .calc-card { background: white; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+    .calc-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .calc-head h3 { margin: 0; font-size: 16px; }
+    .calc-actions { display: flex; align-items: center; gap: 8px; }
+    .calc-count { font-weight: 800; white-space: nowrap; }
+    .copy-all { background: #eff6ff; color: var(--blue); border: 1px solid #bfdbfe; padding: 7px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; }
+    .copy-all:hover { background: #dbeafe; }
+    .set-row { position: relative; background: #eef7f2; border-radius: 10px; padding: 12px 48px 12px 12px; margin-bottom: 10px; }
+    .set-row:last-child { margin-bottom: 0; }
+    .set-title { color: var(--blue); font-weight: 800; margin-bottom: 8px; }
+    .set-numbers { line-height: 1.9; word-break: break-word; }
+    .copy-one { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 9px; background: #16a34a; color: #fff; font-weight: 900; font-size: 16px; display: grid; place-items: center; }
+    .copy-one:hover { background: #15803d; }
+    .special-modal { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, .6); display: none; align-items: center; justify-content: center; padding: 18px; }
+    .special-modal.show { display: flex; }
+    .special-box { width: min(720px, 100%); max-height: 90vh; overflow: auto; background: white; border-radius: 18px; padding: 22px; box-shadow: var(--shadow); }
+    .special-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .special-item { border-radius: 12px; padding: 14px; color: white; font-weight: 800; text-align: center; cursor: pointer; transition: .2s; }
+    .special-item:hover { transform: translateY(-1px); filter: brightness(.96); }
+    .special-item.ham { background: #2563eb; }
+    .special-item.front { background: #16a34a; }
+    .special-item.back { background: #7c3aed; }
+    .special-item.sibling { background: #f59e0b; color: #111827; }
+    .special-item.prahan { background: #dc2626; }
+    .special-item.gold { background: #fbbf24; color: #111827; }
+
+    .toast { position: fixed; top: 18px; right: 18px; z-index: 50; background: #22c55e; color: white; padding: 12px 18px; border-radius: 10px; font-weight: 700; opacity: 0; pointer-events: none; transition: .25s; }
+    .toast.show { opacity: 1; }
+    .slip-preview { width: min(520px, 100%); max-height: 72vh; object-fit: contain; border-radius: 12px; border: 1px solid var(--line); background: #f8fafc; }
+    .slip-thumb { display: none; width: 160px; max-height: 220px; object-fit: contain; margin: 10px 0; border: 1px solid var(--line); border-radius: 10px; background: #f8fafc; }
+    .slip-thumb.show { display: block; }
+    .notice-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .notice-card { border-radius: 14px; padding: 14px; font-weight: 800; background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+    .notice-card.red { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+    .notice-card.blue { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .chart { display: grid; gap: 8px; margin-top: 12px; }
+    .bar-row { display: grid; grid-template-columns: 82px minmax(0, 1fr) 72px; align-items: center; gap: 10px; font-size: 13px; }
+    .bar-track { height: 12px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #2563eb, #16a34a); }
+    .member-link { background: transparent; color: var(--blue); font-weight: 800; padding: 0; }
+    .modal-list { display: grid; gap: 8px; margin-top: 10px; }
+    .modal-list div { padding: 10px; background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; }
+
+    @media (max-width: 820px) {
+      .grid, .grid3, .grid4, .payment-box { grid-template-columns: 1fr; }
+      .hero { padding: 24px; min-height: 360px; }
+      .nav { align-items: flex-start; }
+      .nav-actions { width: 100%; justify-content: flex-start; }
+      .qr { width: 100%; max-width: 280px; }
+      .set-row, .special-grid, .notice-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo">PK</div>
+        <div>
+          <h1>พร้อมคีย์</h1>
+          <p>LOTTERY MEMBER TOOL</p>
+        </div>
+      </div>
+      <div class="nav-actions" id="navActions"></div>
+    </nav>
+
+    <main id="landingPage">
+      <section class="hero">
+        <h2>พร้อมคีย์ เว็บช่วยจัดชุดเลขสำหรับสมาชิก</h2>
+        <p>สมัครสมาชิก เลือกแพ็กเกจ อัปโหลดสลิป รอแอดมินอนุมัติ แล้วใช้งานเครื่องมือรันเลขได้ตามวันหมดอายุ</p>
+        <div class="hero-actions">
+          <button class="btn green" onclick="showPage('authPage'); setAuthTab('register')">สมัครสมาชิก</button>
+          <button class="btn" onclick="showPage('authPage'); setAuthTab('login')">เข้าสู่ระบบ</button>
+          <button class="btn dark" onclick="openLine()">ติดต่อ LINE OA</button>
+        </div>
+      </section>
+
+      <h2 class="section-title">ราคาแพ็กเกจ</h2>
+      <div class="grid4" id="publicPackages"></div>
+
+      <h2 class="section-title">เริ่มต้นใช้งานง่าย</h2>
+      <div class="grid3">
+        <div class="card"><h3>1. สมัครสมาชิก</h3><p class="muted">กรอกชื่อผู้ใช้ เบอร์โทร และ LINE ID</p></div>
+        <div class="card"><h3>2. เลือกแพ็กเกจ</h3><p class="muted">เลือกแพ็กเกจที่ต้องการ แล้วโอนตามยอด</p></div>
+        <div class="card"><h3>3. รออนุมัติ</h3><p class="muted">แอดมินตรวจสลิป อนุมัติแล้วใช้งานได้ทันที</p></div>
+      </div>
+    </main>
+
+    <main id="authPage" class="hidden">
+      <section class="card form">
+        <div class="tabs">
+          <button id="loginTab" onclick="setAuthTab('login')">เข้าสู่ระบบ</button>
+          <button id="registerTab" onclick="setAuthTab('register')">สมัครสมาชิก</button>
+        </div>
+
+        <div id="loginForm">
+          <h2>เข้าสู่ระบบ</h2>
+          <input class="field" id="loginUsername" placeholder="Username">
+          <input class="field" id="loginPassword" type="password" placeholder="Password">
+          <button class="btn full" onclick="login()">เข้าสู่ระบบ</button>
+          <p class="muted" style="margin-top:10px;">แอดมินทดลอง: admin / 1234</p>
+        </div>
+
+        <div id="registerForm" class="hidden">
+          <h2>สมัครสมาชิก</h2>
+          <input class="field" id="regName" placeholder="ชื่อ">
+          <input class="field" id="regPhone" placeholder="เบอร์โทร">
+          <input class="field" id="regLine" placeholder="LINE ID">
+          <input class="field" id="regUsername" placeholder="Username">
+          <input class="field" id="regPassword" type="password" placeholder="Password">
+          <button class="btn green full" onclick="register()">สมัครสมาชิก</button>
+        </div>
+      </section>
+    </main>
+
+    <main id="memberPage" class="hidden">
+      <div class="dash-head">
+        <div>
+          <h2 id="memberWelcome">หน้าหลักผู้ใช้</h2>
+          <p class="muted">ดูแพ็กเกจ วันหมดอายุ และใช้งานเครื่องมือรันเลข</p>
+        </div>
+      </div>
+
+      <div id="memberNotice"></div>
+
+      <section class="card" style="margin-top:16px;">
+        <h3>เลือกชุดเลขพิเศษ</h3>
+        <p class="muted">กดเลือกชุดที่ต้องการ ระบบจะแสดงผลในช่อง 3 ตัวรวมตองรวมหามด้านล่าง</p>
+        <div class="special-grid">
+          <div class="special-item ham" onclick="selectPresetNumbers('ham')">ชุดหาม</div>
+          <div class="special-item front" onclick="selectPresetNumbers('doubleFront')">ชุดเบิ้ลหน้า</div>
+          <div class="special-item back" onclick="selectPresetNumbers('doubleBack')">ชุดเบิ้ลหลัง</div>
+          <div class="special-item sibling" onclick="selectPresetNumbers('sibling')">เลขพี่น้อง</div>
+          <div class="special-item prahan" onclick="selectPresetNumbers('prahan')">ชุดประหาร</div>
+        </div>
+      </section>
+
+      <section class="card calculator" style="margin-top:16px;" id="calculatorPanel">
+        <h3>เครื่องมือรันเลข</h3>
+        <p class="muted" style="margin-bottom:10px;">ใช้งานได้เมื่อสมาชิกได้รับอนุมัติและยังไม่หมดอายุ</p>
+        <textarea id="numberInput" oninput="autoCalculateNumbers()" placeholder="ใส่เลข เช่น 2157 หรือหลายบรรทัด"></textarea>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin:12px 0;">
+          <button class="btn" onclick="calculateNumbers()">คำนวณ</button>
+          <button class="btn gray" onclick="clearNumbers()">เริ่มใหม่</button>
+        </div>
+        <div class="grid" id="calcGrid">
+          <div class="calc-card">
+            <div class="calc-head"><h3>2 ตัวปกติ</h3><div class="calc-actions"><span class="calc-count" id="twoNormalCount">0 ชุด</span><button class="copy-all" onclick="copyCalc('twoNormal')" title="คัดลอกทั้งหมด">คัดลอก</button></div></div>
+            <div id="twoNormal"></div>
+          </div>
+          <div class="calc-card">
+            <div class="calc-head"><h3>2 ตัวรวมเบิ้ล</h3><div class="calc-actions"><span class="calc-count" id="twoDoubleCount">0 ชุด</span><button class="copy-all" onclick="copyCalc('twoDouble')" title="คัดลอกทั้งหมด">คัดลอก</button></div></div>
+            <div id="twoDouble"></div>
+          </div>
+          <div class="calc-card">
+            <div class="calc-head"><h3>3 ตัวปกติ</h3><div class="calc-actions"><span class="calc-count" id="threeNormalCount">0 ชุด</span><button class="copy-all" onclick="copyCalc('threeNormal')" title="คัดลอกทั้งหมด">คัดลอก</button></div></div>
+            <div id="threeNormal"></div>
+          </div>
+          <div class="calc-card">
+            <div class="calc-head"><h3>3 ตัวรวมหาม</h3><div class="calc-actions"><span class="calc-count" id="threeHamCount">0 ชุด</span><button class="copy-all" onclick="copyCalc('threeHam')" title="คัดลอกทั้งหมด">คัดลอก</button></div></div>
+            <div id="threeHam"></div>
+          </div>
+          <div class="calc-card">
+            <div class="calc-head"><h3>3 ตัวรวมตองรวมหาม</h3><div class="calc-actions"><span class="calc-count" id="threeAllCount">0 ชุด</span><button class="copy-all" onclick="copyCalc('threeAll')" title="คัดลอกทั้งหมด">คัดลอก</button></div></div>
+            <div id="threeAll"></div>
+          </div>
+          <div class="calc-card">
+            <div class="calc-head"><h3>ชุดเลขพิเศษ</h3><div class="calc-actions"><span class="calc-count" id="specialNumbersCount">0 ชุด</span><button class="copy-all" onclick="copyCalc('specialNumbers')" title="คัดลอกทั้งหมด">คัดลอก</button></div></div>
+            <div id="specialNumbers"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid4" id="memberStats" style="margin-top:16px;"></div>
+    </main>
+
+    <main id="paymentHistoryPage" class="hidden">
+      <div class="dash-head">
+        <div>
+          <h2>ประวัติการชำระเงิน</h2>
+          <p class="muted">รายการแพ็กเกจที่เคยอัปโหลดสลิปและสถานะอนุมัติ</p>
+        </div>
+        <button class="btn dark" onclick="showPage('memberPage')">กลับหน้าหลัก</button>
+      </div>
+      <section class="card">
+        <div class="table-wrap"><table><thead><tr><th>วันที่</th><th>แพ็กเกจ</th><th>ยอด</th><th>สถานะ</th></tr></thead><tbody id="paymentRows"></tbody></table></div>
+      </section>
+    </main>
+
+    <main id="renewPage" class="hidden">
+      <div class="dash-head">
+        <div>
+          <h2>ต่ออายุ / เลือกแพ็กเกจ</h2>
+          <p class="muted">เลือกแพ็กเกจที่ต้องการ แล้วอัปโหลดสลิปเพื่อรอแอดมินอนุมัติ</p>
+        </div>
+        <button class="btn dark" onclick="showPage('memberPage')">กลับหน้าหลัก</button>
+      </div>
+      <div class="grid" style="margin-top:16px;">
+        <section class="card">
+          <h3>เลือกแพ็กเกจ</h3>
+          <div id="memberPackages" class="grid"></div>
+        </section>
+        <section class="card">
+          <h3>ชำระเงิน</h3>
+          <div id="paymentPanel" class="muted">เลือกแพ็กเกจก่อน ระบบจะแสดง QR และยอดชำระ</div>
+        </section>
+      </div>
+    </main>
+
+    <main id="adminPage" class="hidden">
+      <div class="dash-head">
+        <div>
+          <h2>หน้าหลัก Admin</h2>
+          <p class="muted">อนุมัติสลิป จัดการสมาชิก แพ็กเกจ และประกาศ</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <span class="badge pending" id="adminBell">🔔 0</span>
+          <button class="btn dark" onclick="logout()">ออกจากระบบ</button>
+        </div>
+      </div>
+
+      <div class="notice-grid" id="adminNotices"></div>
+      <div class="grid4" id="adminStats"></div>
+
+      <div class="grid" style="margin-top:16px;">
+        <section class="card">
+          <h3>กราฟรายได้ 7 วัน</h3>
+          <div id="income7Chart" class="chart"></div>
+        </section>
+        <section class="card">
+          <h3>กราฟสมาชิก</h3>
+          <div id="memberChart" class="chart"></div>
+        </section>
+      </div>
+
+      <section class="card" style="margin-top:16px;">
+        <h3>สลิปรออนุมัติ</h3>
+        <div class="table-wrap"><table><thead><tr><th>วันที่</th><th>สมาชิก</th><th>แพ็กเกจ</th><th>ยอด</th><th>สลิป</th><th>จัดการ</th></tr></thead><tbody id="pendingSlipRows"></tbody></table></div>
+      </section>
+
+      <section class="card" style="margin-top:16px;">
+        <h3>จัดการสมาชิก</h3>
+        <div class="grid4">
+          <input class="field" id="adminUsername" placeholder="Username">
+          <input class="field" id="adminPassword" placeholder="Password">
+          <input class="field" id="adminName" placeholder="ชื่อลูกค้า">
+          <input class="field" id="adminPhone" placeholder="เบอร์โทร">
+          <input class="field" id="adminLine" placeholder="LINE ID">
+          <select class="field" id="adminPackage"></select>
+          <input class="field" id="adminExpire" type="date">
+          <select class="field" id="adminStatus">
+            <option value="pending">pending</option>
+            <option value="active">active</option>
+            <option value="expired">expired</option>
+            <option value="suspended">suspended</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+          <button class="btn" onclick="saveMemberFromAdmin()">บันทึกสมาชิก</button>
+          <button class="btn gray" onclick="clearAdminMemberForm()">ล้างฟอร์ม</button>
+        </div>
+        <input class="field" id="memberSearch" oninput="renderAdmin()" placeholder="ค้นหาด้วยชื่อ / เบอร์ / ไลน์ / username">
+        <div class="table-wrap"><table><thead><tr><th>Username</th><th>ชื่อ</th><th>เบอร์</th><th>LINE</th><th>แพ็กเกจ</th><th>หมดอายุ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="memberRows"></tbody></table></div>
+      </section>
+
+      <div class="grid" style="margin-top:16px;">
+        <section class="card">
+          <h3>จัดการแพ็กเกจ</h3>
+          <div class="grid">
+            <input class="field" id="pkgName" placeholder="ชื่อแพ็กเกจ">
+            <input class="field" id="pkgDays" type="number" placeholder="จำนวนวัน">
+            <input class="field" id="pkgPrice" type="number" placeholder="ราคา">
+            <button class="btn" onclick="savePackage()">บันทึกแพ็กเกจ</button>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>แพ็กเกจ</th><th>วัน</th><th>ราคา</th><th>แก้ไข</th></tr></thead><tbody id="packageRows"></tbody></table></div>
+        </section>
+        <section class="card">
+          <h3>ระบบประกาศ</h3>
+          <textarea class="field" id="announcementText" placeholder="เช่น ระบบอัปเดตฟีเจอร์ใหม่วันนี้"></textarea>
+          <button class="btn" onclick="saveAnnouncement()">บันทึกประกาศ</button>
+          <div id="announcementPreview" style="margin-top:12px;"></div>
+        </section>
+      </div>
+
+      <div class="grid" style="margin-top:16px;">
+        <section class="card">
+          <h3>ระบบคูปอง</h3>
+          <div class="grid">
+            <input class="field" id="couponCode" placeholder="เช่น SUMMER50">
+            <select class="field" id="couponType">
+              <option value="amount">ลดเป็นบาท</option>
+              <option value="percent">ลดเป็น %</option>
+            </select>
+            <input class="field" id="couponValue" type="number" placeholder="มูลค่า">
+            <button class="btn" onclick="saveCoupon()">บันทึกคูปอง</button>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>โค้ด</th><th>ประเภท</th><th>มูลค่า</th><th>จัดการ</th></tr></thead><tbody id="couponRows"></tbody></table></div>
+        </section>
+        <section class="card">
+          <h3>Log การทำงานแอดมิน</h3>
+          <div class="table-wrap"><table><thead><tr><th>เวลา</th><th>แอดมิน</th><th>รายการ</th></tr></thead><tbody id="adminLogRows"></tbody></table></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="special-modal" id="slipPreviewModal">
+    <div class="special-box">
+      <h2>ดูสลิปโอนเงิน</h2>
+      <p class="muted" id="slipPreviewInfo" style="margin-bottom:12px;"></p>
+      <img class="slip-preview" id="slipPreviewImage" alt="สลิปโอนเงิน">
+      <button class="btn full" style="margin-top:14px;" onclick="openSlipImageNewTab()">เปิดรูปในแท็บใหม่</button>
+      <button class="btn red full" style="margin-top:14px;" onclick="closeSlipPreview()">ปิด</button>
+    </div>
+  </div>
+
+  <div class="special-modal" id="memberDetailModal">
+    <div class="special-box">
+      <h2 id="memberDetailTitle">ข้อมูลสมาชิก</h2>
+      <div id="memberDetailBody"></div>
+      <button class="btn red full" style="margin-top:14px;" onclick="closeMemberDetail()">ปิด</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">บันทึกแล้ว</div>
+
+  <script>
+    const defaultPackages = [
+      { id: "p1", name: "1 เดือน", days: 30, price: 159 },
+      { id: "p3", name: "3 เดือน", days: 90, price: 399 },
+      { id: "p5", name: "5 เดือน", days: 150, price: 599 },
+      { id: "p12", name: "1 ปี", days: 365, price: 1290 }
+    ];
+
+    const defaultUsers = {
+      admin: { username: "admin", password: "1234", role: "admin", name: "Admin", phone: "", line: "", status: "active", packageId: "", expire: "2026-12-31", createdAt: "2026-06-20", lastLogin: "" },
+      member01: { username: "member01", password: "rn0001", role: "member", name: "ลูกค้าทดลอง", phone: "0800000001", line: "member01", status: "active", packageId: "p1", expire: "2026-12-31", createdAt: "2026-06-20", lastLogin: "", credit: 0, refCode: "member01" }
+    };
+
+    let packages = load("rn_packages", defaultPackages);
+    let users = load("rn_users", defaultUsers);
+    let payments = load("rn_payments", []);
+    let usageHistory = load("rn_usage", []);
+    let coupons = load("rn_coupons", [
+      { code: "SUMMER50", type: "amount", value: 50 },
+      { code: "WELCOME10", type: "percent", value: 10 }
+    ]);
+    let adminLogs = load("rn_admin_logs", []);
+    let announcement = load("rn_announcement", "โปรลดราคาเฉพาะเดือนนี้ ติดต่อ LINE OA เพื่อรับสิทธิ์");
+    let currentUser = null;
+    let selectedPackageId = null;
+    let calcStore = {};
+
+    function load(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) || structuredClone(fallback); }
+      catch { return structuredClone(fallback); }
+    }
+
+    function saveAll() {
+      localStorage.setItem("rn_packages", JSON.stringify(packages));
+      localStorage.setItem("rn_users", JSON.stringify(users));
+      localStorage.setItem("rn_payments", JSON.stringify(payments));
+      localStorage.setItem("rn_usage", JSON.stringify(usageHistory));
+      localStorage.setItem("rn_coupons", JSON.stringify(coupons));
+      localStorage.setItem("rn_admin_logs", JSON.stringify(adminLogs));
+      localStorage.setItem("rn_announcement", JSON.stringify(announcement));
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById("toast");
+      toast.textContent = text;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1600);
+    }
+
+    function showPage(id) {
+      ["landingPage", "authPage", "memberPage", "renewPage", "paymentHistoryPage", "adminPage"].forEach(page => document.getElementById(page).classList.add("hidden"));
+      document.getElementById(id).classList.remove("hidden");
+      renderNav();
+      if (id === "landingPage") renderLanding();
+      if (id === "memberPage") renderMember();
+      if (id === "renewPage") renderRenewPage();
+      if (id === "paymentHistoryPage") renderPaymentHistoryPage();
+      if (id === "adminPage") renderAdmin();
+    }
+
+    function renderNav() {
+      const nav = document.getElementById("navActions");
+      if (!currentUser) {
+        nav.innerHTML = `
+          <button class="btn green" onclick="showPage('authPage'); setAuthTab('register')">สมัครสมาชิก</button>
+          <button class="btn" onclick="showPage('authPage'); setAuthTab('login')">เข้าสู่ระบบ</button>
+          <button class="btn dark" onclick="openLine()">LINE OA</button>`;
+        return;
+      }
+      nav.innerHTML = `
+        <button class="btn" onclick="showPage('${currentUser.role === "admin" ? "adminPage" : "memberPage"}')">หน้าหลัก</button>
+        ${currentUser.role === "member" ? `<button class="btn green" onclick="showPage('renewPage')">ต่ออายุ</button>` : ""}
+        ${currentUser.role === "member" ? `<button class="btn" onclick="showPage('paymentHistoryPage')">ประวัติชำระเงิน</button>` : ""}
+        <button class="btn dark" onclick="logout()">ออกจากระบบ</button>`;
+    }
+
+    function renderLanding() {
+      document.getElementById("publicPackages").innerHTML = packages.map(pkg => `
+        <div class="card">
+          <h3>${pkg.name}</h3>
+          <div class="price">${pkg.price.toLocaleString()}฿</div>
+          <p class="muted">${pkg.days} วัน</p>
+          <button class="btn green full" onclick="showPage('authPage'); setAuthTab('register')">สมัครแพ็กเกจนี้</button>
+        </div>`).join("");
+    }
+
+    function setAuthTab(tab) {
+      document.getElementById("loginTab").classList.toggle("active", tab === "login");
+      document.getElementById("registerTab").classList.toggle("active", tab === "register");
+      document.getElementById("loginForm").classList.toggle("hidden", tab !== "login");
+      document.getElementById("registerForm").classList.toggle("hidden", tab !== "register");
+    }
+
+    function register() {
+      const username = document.getElementById("regUsername").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+      const name = document.getElementById("regName").value.trim();
+      const phone = document.getElementById("regPhone").value.trim();
+      const line = document.getElementById("regLine").value.trim();
+      if (!username || !password || !name || !phone || !line) return alert("กรุณากรอกข้อมูลให้ครบ");
+      if (!/^[a-zA-Z0-9_-]+$/.test(username)) return alert("Username ใช้ได้เฉพาะอังกฤษ ตัวเลข _ และ -");
+      if (users[username]) return alert("Username นี้ถูกใช้แล้ว");
+      users[username] = { username, password, role: "member", name, phone, line, status: "pending", packageId: "", expire: "", createdAt: todayText(), lastLogin: "", lastIp: "local", credit: 0, refCode: username };
+      saveAll();
+      showToast("สมัครสมาชิกแล้ว กรุณาเข้าสู่ระบบและเลือกแพ็กเกจ");
+      setAuthTab("login");
+      document.getElementById("loginUsername").value = username;
+    }
+
+    function login() {
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const user = users[username];
+      if (!user || user.password !== password) return alert("Username หรือ Password ไม่ถูกต้อง");
+      user.lastLogin = new Date().toLocaleString("th-TH");
+      user.lastIp = "local";
+      currentUser = user;
+      localStorage.setItem("rn_current_user", username);
+      saveAll();
+      showToast("เข้าสู่ระบบแล้ว");
+      showPage(user.role === "admin" ? "adminPage" : "memberPage");
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem("rn_current_user");
+      showToast("ออกจากระบบแล้ว");
+      showPage("landingPage");
+    }
+
+    function openLine() { window.open("https://lin.ee/SR7nkfm", "_blank", "noopener"); }
+    function getPackage(id) { return packages.find(pkg => pkg.id === id) || null; }
+    function todayText() { return new Date().toISOString().slice(0, 10); }
+    function addDays(dateText, days) {
+      const base = dateText && new Date(dateText) > new Date() ? new Date(dateText) : new Date();
+      base.setDate(base.getDate() + Number(days));
+      return base.toISOString().slice(0, 10);
+    }
+    function daysLeft(expire) {
+      if (!expire) return 0;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const end = new Date(expire + "T00:00:00");
+      return Math.ceil((end - today) / 86400000);
+    }
+    function memberStatus(user) {
+      if (user.status === "suspended") return "suspended";
+      if (user.status === "pending") return "pending";
+      if (daysLeft(user.expire) < 0) return "expired";
+      return "active";
+    }
+    function canUseFeature(user) { return memberStatus(user) === "active"; }
+
+    function logAdmin(action) {
+      adminLogs.unshift({
+        at: new Date().toLocaleString("th-TH"),
+        admin: currentUser?.username || "admin",
+        action
+      });
+      adminLogs = adminLogs.slice(0, 80);
+    }
+
+    function renderMember() {
+      currentUser = users[currentUser.username];
+      const pkg = getPackage(currentUser.packageId);
+      const left = Math.max(0, daysLeft(currentUser.expire));
+      const status = memberStatus(currentUser);
+      document.getElementById("memberWelcome").textContent = `สวัสดี ${currentUser.name || currentUser.username}`;
+      document.getElementById("memberNotice").innerHTML = announcement ? `<div class="card" style="margin-bottom:16px;"><strong>ประกาศ:</strong> ${announcement}</div>` : "";
+      document.getElementById("memberStats").innerHTML = `
+        <div class="stat">แพ็กเกจปัจจุบัน<strong>${pkg ? pkg.name : "-"}</strong></div>
+        <div class="stat">วันหมดอายุ<strong>${currentUser.expire || "-"}</strong></div>
+        <div class="stat">จำนวนวันที่เหลือ<strong>${left}</strong></div>
+        <div class="stat">สถานะ<strong><span class="badge ${status}">${status}</span></strong></div>`;
+      document.getElementById("calculatorPanel").style.opacity = canUseFeature(currentUser) ? "1" : ".45";
+    }
+
+    function renderRenewPage() {
+      currentUser = users[currentUser.username];
+      document.getElementById("memberPackages").innerHTML = packages.map(pkg => `
+        <div class="card">
+          <h3>${pkg.name}</h3>
+          <div class="price">${pkg.price.toLocaleString()}฿</div>
+          <p class="muted">${pkg.days} วัน</p>
+          <button class="btn full" onclick="selectPackage('${pkg.id}')">เลือกแพ็กเกจ</button>
+        </div>`).join("");
+      document.getElementById("paymentPanel").innerHTML = "เลือกแพ็กเกจก่อน ระบบจะแสดง QR และยอดชำระ";
+    }
+
+    function getQrByPrice(price) {
+      const qrMap = {
+        159: "qr-159.jpg",
+        399: "qr-399.jpg",
+        599: "qr-599.jpg",
+        1290: "qr-1290.jpg"
+      };
+      return qrMap[price] || "";
+    }
+
+    function selectPackage(packageId) {
+      selectedPackageId = packageId;
+      const pkg = getPackage(packageId);
+      const qrFile = getQrByPrice(pkg.price);
+      const qrHtml = qrFile
+        ? `<a class="qr-link" href="${qrFile}" target="_blank" rel="noopener" title="เปิด QR ขนาดใหญ่"><img class="qr-img" src="${qrFile}" alt="QR พร้อมเพย์ ${pkg.price.toLocaleString()} บาท"></a>`
+        : `<span>QR<br>${pkg.price.toLocaleString()}฿</span>`;
+      const qrButton = qrFile
+        ? `<button class="btn full" style="margin:10px 0;" onclick="openQrImage('${qrFile}')">เปิด QR ขนาดใหญ่</button>`
+        : "";
+      document.getElementById("paymentPanel").innerHTML = `
+        <div class="payment-box">
+          <div class="qr">${qrHtml}</div>
+          <div>
+            <h3>${pkg.name}</h3>
+            <p class="price">${pkg.price.toLocaleString()}฿</p>
+            <p class="muted">โอนเงินตามยอด แล้วอัปโหลดสลิปเพื่อให้แอดมินอนุมัติ</p>
+            ${qrButton}
+            <input class="field" id="slipFile" type="file" accept="image/*" onchange="previewSelectedSlip()">
+            <img class="slip-thumb" id="selectedSlipPreview" alt="ตัวอย่างสลิปที่เลือก">
+            <button class="btn green" onclick="uploadSlip()">อัปโหลดสลิป</button>
+          </div>
+        </div>`;
+    }
+
+    function openQrImage(src) {
+      window.open(src, "_blank", "noopener");
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function hashText(text) {
+      let hash = 0;
+      for (let i = 0; i < text.length; i++) {
+        hash = ((hash << 5) - hash) + text.charCodeAt(i);
+        hash |= 0;
+      }
+      return String(hash);
+    }
+
+    function findDuplicateSlip(slipHash) {
+      return payments.find(payment => payment.slipHash && payment.slipHash === slipHash);
+    }
+
+    function isDuplicatePayment(payment) {
+      if (!payment.slipHash) return false;
+      return payments.some(item => item.id !== payment.id && item.slipHash === payment.slipHash);
+    }
+
+    async function previewSelectedSlip() {
+      const file = document.getElementById("slipFile").files[0];
+      const preview = document.getElementById("selectedSlipPreview");
+      if (!file) {
+        preview.src = "";
+        preview.classList.remove("show");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        alert("กรุณาเลือกไฟล์รูปภาพเท่านั้น");
+        document.getElementById("slipFile").value = "";
+        preview.src = "";
+        preview.classList.remove("show");
+        return;
+      }
+      const dataUrl = await readFileAsDataUrl(file);
+      preview.src = dataUrl;
+      preview.dataset.dataUrl = dataUrl;
+      preview.classList.add("show");
+    }
+
+    async function uploadSlip() {
+      const file = document.getElementById("slipFile").files[0];
+      if (!selectedPackageId) return alert("กรุณาเลือกแพ็กเกจก่อน");
+      if (!file) return alert("กรุณาอัปโหลดสลิป");
+      if (!file.type.startsWith("image/")) return alert("กรุณาอัปโหลดไฟล์รูปภาพเท่านั้น");
+      const pkg = getPackage(selectedPackageId);
+      const preview = document.getElementById("selectedSlipPreview");
+      const slipDataUrl = preview.dataset.dataUrl || await readFileAsDataUrl(file);
+      const slipHash = hashText(slipDataUrl);
+      const duplicate = findDuplicateSlip(slipHash);
+      if (duplicate) {
+        alert(`สลิปนี้เคยถูกอัปโหลดแล้วโดย ${duplicate.username} สถานะ: ${duplicate.status}`);
+        return;
+      }
+      payments.push({ id: "pay_" + Date.now(), username: currentUser.username, packageId: pkg.id, amount: pkg.price, slipName: file.name, slipDataUrl, slipHash, status: "pending", createdAt: new Date().toLocaleString("th-TH") });
+      users[currentUser.username].status = "pending";
+      try {
+        saveAll();
+      } catch (error) {
+        payments.pop();
+        alert("รูปสลิปใหญ่เกินไป กรุณาแคป/ย่อรูปให้เล็กลงแล้วอัปโหลดใหม่");
+        return;
+      }
+      showToast("อัปโหลดสลิปแล้ว รอแอดมินอนุมัติ");
+      renderRenewPage();
+    }
+
+    function renderPaymentHistoryPage() {
+      currentUser = users[currentUser.username];
+      const myPays = payments.filter(item => item.username === currentUser.username).slice().reverse();
+      document.getElementById("paymentRows").innerHTML = myPays.map(item => `<tr><td>${item.createdAt}</td><td>${getPackage(item.packageId)?.name || "-"}</td><td>${item.amount.toLocaleString()}฿</td><td><span class="badge ${item.status}">${item.status}</span></td></tr>`).join("") || "<tr><td colspan='4'>ยังไม่มีประวัติ</td></tr>";
+    }
+
+    function combos(digits, len) {
+      const out = [];
+      function walk(start, path) {
+        if (path.length === len) { out.push(path.join("")); return; }
+        for (let i = start; i < digits.length; i++) walk(i + 1, [...path, digits[i]]);
+      }
+      walk(0, []);
+      return out;
+    }
+    function unique(arr) { return [...new Set(arr)]; }
+    function sortNum(arr) { return [...arr].sort((a,b) => Number(a) - Number(b)); }
+    function getTwoNormal(digits) { return combos(digits, 2); }
+    function getTwoDouble(digits) { return [...getTwoNormal(digits), ...digits.map(x => x + x)]; }
+    function getThreeNormal(digits) { return digits.length >= 3 ? combos(digits, 3) : []; }
+    function getThreeHam(digits) {
+      const result = [];
+      getTwoNormal(digits).forEach(pair => {
+        result.push(pair[0] + pair[0] + pair[1]);
+        result.push(pair[0] + pair[1] + pair[1]);
+      });
+      return sortNum(result);
+    }
+    function getThreeAll(digits) { return sortNum([...getThreeHam(digits), ...digits.map(x => x + x + x)]); }
+    function renderCalcSet(id, label, items) {
+      calcStore[id] = [...(calcStore[id] || []), ...items];
+      if (!items.length) return "";
+      return `
+        <div class="set-row">
+          <div>
+            <div class="set-title">📌 ชุดเลข: ${label} (${items.length} ชุด)</div>
+            <div class="set-numbers">${items.join(" ")}</div>
+          </div>
+          <button class="copy-one" onclick="copyTextDirect('${encodeURIComponent(items.join(" "))}', '${label}')" title="คัดลอกชุดนี้">⧉</button>
+        </div>`;
+    }
+    function renderCalcBox(id, html, count) {
+      document.getElementById(id).innerHTML = html || `<div class="result-box">ไม่มีข้อมูล</div>`;
+      document.getElementById(id + "Count").textContent = `${count} ชุด`;
+    }
+    function autoCalculateNumbers() {
+      if (!currentUser || !canUseFeature(currentUser)) return;
+      const value = document.getElementById("numberInput").value.trim();
+      if (!value) {
+        clearCalcResults();
+        return;
+      }
+      calculateNumbers(false);
+    }
+    function calculateNumbers(shouldRecord = true) {
+      if (!canUseFeature(currentUser)) return alert("สมาชิกยังใช้งานไม่ได้ กรุณาต่ออายุหรือรอแอดมินอนุมัติ");
+      const input = document.getElementById("numberInput").value.trim();
+      if (!input) return alert("กรุณาใส่เลข");
+      calcStore = {};
+      const lines = input.split("\n").map(line => line.replace(/\D/g, "")).filter(Boolean);
+      const html = { twoNormal: "", twoDouble: "", threeNormal: "", threeHam: "", threeAll: "" };
+      const counts = { twoNormal: 0, twoDouble: 0, threeNormal: 0, threeHam: 0, threeAll: 0 };
+      lines.forEach(line => {
+        const digits = unique(line.split(""));
+        if (digits.length < 2) return;
+        const twoNormal = getTwoNormal(digits);
+        const twoDouble = getTwoDouble(digits);
+        const threeNormal = getThreeNormal(digits);
+        const threeHam = getThreeHam(digits);
+        const threeAll = getThreeAll(digits);
+        html.twoNormal += renderCalcSet("twoNormal", line, twoNormal);
+        html.twoDouble += renderCalcSet("twoDouble", line, twoDouble);
+        html.threeNormal += renderCalcSet("threeNormal", line, threeNormal);
+        html.threeHam += renderCalcSet("threeHam", line, threeHam);
+        html.threeAll += renderCalcSet("threeAll", line, threeAll);
+        counts.twoNormal += twoNormal.length;
+        counts.twoDouble += twoDouble.length;
+        counts.threeNormal += threeNormal.length;
+        counts.threeHam += threeHam.length;
+        counts.threeAll += threeAll.length;
+      });
+      Object.keys(html).forEach(id => renderCalcBox(id, html[id], counts[id]));
+      if (shouldRecord) saveAll();
+    }
+    function clearNumbers() {
+      document.getElementById("numberInput").value = "";
+      clearCalcResults();
+    }
+    function clearCalcResults() {
+      calcStore = {};
+      ["twoNormal","twoDouble","threeNormal","threeHam","threeAll","specialNumbers"].forEach(id => {
+        document.getElementById(id).innerHTML = "";
+        document.getElementById(id + "Count").textContent = "0 ชุด";
+      });
+    }
+    async function copyCalc(id) {
+      const text = (calcStore[id] || []).join(" ");
+      if (!text) return showToast("ยังไม่มีข้อมูลให้คัดลอก");
+      await navigator.clipboard.writeText(text);
+      showToast("คัดลอกทั้งหมดแล้ว");
+    }
+    async function copyTextDirect(encoded, label) {
+      await navigator.clipboard.writeText(decodeURIComponent(encoded));
+      showToast(`คัดลอกชุด ${label} แล้ว`);
+    }
+    function selectPresetNumbers(type) {
+      if (!canUseFeature(currentUser)) return alert("สมาชิกยังใช้งานไม่ได้");
+      let label = "";
+      let items = [];
+      if (type === "ham") {
+        label = "ชุดหาม";
+        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) items.push(`${a}${b}${a}`);
+      } else if (type === "doubleFront") {
+        label = "ชุดเบิ้ลหน้า";
+        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) items.push(`${a}${a}${b}`);
+      } else if (type === "doubleBack") {
+        label = "ชุดเบิ้ลหลัง";
+        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) items.push(`${a}${b}${b}`);
+      } else if (type === "sibling") {
+        label = "เลขพี่น้อง";
+        items = ["01","09","10","12","21","23","32","34","43","45","54","56","65","67","76","78","87","89","90","98"];
+      } else if (type === "prahan") {
+        label = "ชุดประหาร";
+        const set = new Set();
+        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) {
+          set.add(`${a}${b}${a}`); set.add(`${a}${a}${b}`); set.add(`${a}${b}${b}`);
+        }
+        items = [...set].sort();
+      } else if (type === "012") {
+        label = "ชุด 012";
+        items = ["012","013","014","015","017","019","023","024","025","027","029","034","035","037","039","045","047","049","057","059","079","123","124","125","127","129","134","135","137","139","145","147","149","157","159","179","234","235","237","239","245","247","249","257","259","279","345","347","349","357","359","379","457","459","479","579"];
+      } else if (type === "012n9") {
+        label = "ชุด 012 ไม่มี 9";
+        items = ["012","013","014","015","016","017","018","023","024","026","025","027","028","034","035","036","037","038","045","047","048","056","057","058","076","086","123","124","126","127","128","134","136","135","137","138","146","147","148","156","157","158","176","178","234","235","236","237","238","246","247","248","256","257","258","276","278","346","345","347","348","356","357","358","368","376","378","456","457","458","468","476","478","576","578","586","678","769","869"];
+      } else if (type === "123") {
+        label = "ชุด 123";
+        items = ["123","124","125","127","128","129","134","135","137","138","139","145","147","148","149","157","158","159","178","179","189","234","235","237","238","239","245","247","248","249","257","258","259","278","279","289","345","347","348","349","357","358","359","378","379","389","457","458","459","478","479","489","578","579","589","789"];
+      }
+      calcStore.specialNumbers = [];
+      renderCalcBox("specialNumbers", renderCalcSet("specialNumbers", label, items), items.length);
+      showToast(`โหลด ${label} แล้ว`);
+    }
+
+    function renderAdmin() {
+      renderAdminStats();
+      renderPendingSlips();
+      renderMembers();
+      renderPackages();
+      renderCoupons();
+      renderAdminLogs();
+      document.getElementById("announcementText").value = announcement;
+      document.getElementById("announcementPreview").innerHTML = announcement ? `<span class="badge active">${announcement}</span>` : "";
+      document.getElementById("adminPackage").innerHTML = packages.map(pkg => `<option value="${pkg.id}">${pkg.name}</option>`).join("");
+    }
+
+    function renderAdminStats() {
+      const members = Object.values(users).filter(u => u.role !== "admin");
+      const active = members.filter(u => memberStatus(u) === "active").length;
+      const expired = members.filter(u => memberStatus(u) === "expired").length;
+      const today = todayText();
+      const thisMonth = today.slice(0, 7);
+      const approved = payments.filter(p => p.status === "approved");
+      const incomeToday = approved.filter(p => (p.approvedAt || "").startsWith(today)).reduce((s,p) => s + p.amount, 0);
+      const incomeMonth = approved.filter(p => (p.approvedAt || "").startsWith(thisMonth)).reduce((s,p) => s + p.amount, 0);
+      const pending = payments.filter(p => p.status === "pending").length;
+      const expireToday = members.filter(u => memberStatus(u) === "active" && daysLeft(u.expire) === 0).length;
+      const expire3 = members.filter(u => memberStatus(u) === "active" && daysLeft(u.expire) >= 0 && daysLeft(u.expire) <= 3).length;
+      const nearExpire = members.filter(u => memberStatus(u) === "active" && daysLeft(u.expire) >= 0 && daysLeft(u.expire) <= 7).length;
+      const best = bestPackageName();
+      document.getElementById("adminBell").textContent = `🔔 ${pending + nearExpire}`;
+      document.getElementById("adminNotices").innerHTML = `
+        <div class="notice-card blue">🔔 สลิปใหม่ <strong>${pending}</strong> รายการ</div>
+        <div class="notice-card">🟠 ใกล้หมดอายุ 7 วัน <strong>${nearExpire}</strong> คน</div>
+        <div class="notice-card red">🔴 หมดอายุวันนี้ <strong>${expireToday}</strong> คน</div>`;
+      document.getElementById("adminStats").innerHTML = `
+        <div class="stat">สมาชิกทั้งหมด<strong>${members.length}</strong></div>
+        <div class="stat">ใช้งานอยู่<strong>${active}</strong></div>
+        <div class="stat">หมดอายุ<strong>${expired}</strong></div>
+        <div class="stat">หมดวันนี้<strong>${expireToday}</strong></div>
+        <div class="stat">หมดใน 3 วัน<strong>${expire3}</strong></div>
+        <div class="stat">หมดใน 7 วัน<strong>${nearExpire}</strong></div>
+        <div class="stat">รายได้วันนี้<strong>${incomeToday.toLocaleString()}฿</strong></div>
+        <div class="stat">รายได้เดือนนี้<strong>${incomeMonth.toLocaleString()}฿</strong></div>
+        <div class="stat">สลิปรออนุมัติ<strong>${pending}</strong></div>
+        <div class="stat">ขายดีที่สุด<strong>${best}</strong></div>`;
+      renderIncomeChart();
+      renderMemberChart(active, expired, pending);
+    }
+
+    function renderIncomeChart() {
+      const approved = payments.filter(p => p.status === "approved");
+      const days = Array.from({ length: 7 }, (_, index) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (6 - index));
+        return d.toISOString().slice(0, 10);
+      });
+      const totals = days.map(day => approved.filter(p => (p.approvedAt || "").startsWith(day)).reduce((sum, p) => sum + p.amount, 0));
+      const max = Math.max(...totals, 1);
+      document.getElementById("income7Chart").innerHTML = days.map((day, i) => `
+        <div class="bar-row"><span>${day.slice(5)}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(totals[i] / max * 100)}%"></div></div><strong>${totals[i].toLocaleString()}฿</strong></div>
+      `).join("");
+    }
+
+    function renderMemberChart(active, expired, pending) {
+      const items = [
+        ["Active", active, "#16a34a"],
+        ["Pending", pending, "#f59e0b"],
+        ["Expired", expired, "#dc2626"]
+      ];
+      const max = Math.max(...items.map(item => item[1]), 1);
+      document.getElementById("memberChart").innerHTML = items.map(([label, value, color]) => `
+        <div class="bar-row"><span>${label}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(value / max * 100)}%;background:${color}"></div></div><strong>${value}</strong></div>
+      `).join("");
+    }
+
+    function bestPackageName() {
+      const count = {};
+      payments.filter(p => p.status === "approved").forEach(p => count[p.packageId] = (count[p.packageId] || 0) + 1);
+      const bestId = Object.entries(count).sort((a,b) => b[1] - a[1])[0]?.[0];
+      return getPackage(bestId)?.name || "-";
+    }
+
+    function renderPendingSlips() {
+      const rows = payments.filter(p => p.status === "pending");
+      document.getElementById("pendingSlipRows").innerHTML = rows.map(p => `
+        <tr><td>${p.createdAt}</td><td>${p.username}</td><td>${getPackage(p.packageId)?.name || "-"}</td><td>${p.amount.toLocaleString()}฿</td><td>${renderSlipCell(p)}</td>
+        <td><button class="btn small green" onclick="approvePayment('${p.id}')">อนุมัติ</button> <button class="btn small red" onclick="rejectPayment('${p.id}')">ไม่อนุมัติ</button> <button class="btn small gray" onclick="deletePayment('${p.id}')">ลบ</button></td></tr>`).join("") || "<tr><td colspan='6'>ไม่มีสลิปรออนุมัติ</td></tr>";
+    }
+
+    function renderSlipCell(payment) {
+      if (payment.slipDataUrl) {
+        const duplicateBadge = isDuplicatePayment(payment) ? `<br><span class="badge expired">สลิปซ้ำ</span>` : "";
+        return `<button class="btn small" onclick="openSlipPreview('${payment.id}')">ดูสลิป</button><br><span class="muted">${payment.slipName}</span>${duplicateBadge}`;
+      }
+
+      return `<span class="badge expired">ไม่มีรูป</span><br><span class="muted">${payment.slipName || "ข้อมูลเก่า"}<br>ให้ลูกค้าอัปโหลดใหม่</span>`;
+    }
+
+    function openSlipPreview(id) {
+      const pay = payments.find(p => p.id === id);
+      if (!pay) return;
+      if (!pay.slipDataUrl) {
+        alert("รายการนี้ไม่มีรูปสลิป อาจเป็นข้อมูลเก่าก่อนเพิ่มระบบดูรูป");
+        return;
+      }
+      document.getElementById("slipPreviewInfo").textContent = `${pay.username} / ${getPackage(pay.packageId)?.name || "-"} / ${pay.amount.toLocaleString()}฿`;
+      document.getElementById("slipPreviewImage").src = pay.slipDataUrl;
+      document.getElementById("slipPreviewModal").classList.add("show");
+    }
+
+    function closeSlipPreview() {
+      document.getElementById("slipPreviewModal").classList.remove("show");
+      document.getElementById("slipPreviewImage").src = "";
+    }
+
+    function openSlipImageNewTab() {
+      const src = document.getElementById("slipPreviewImage").src;
+      if (!src) return;
+      const tab = window.open("", "_blank", "noopener");
+      if (tab) {
+        tab.document.write(`<title>Slip Preview</title><img src="${src}" style="max-width:100%;height:auto;display:block;margin:auto;">`);
+        tab.document.close();
+      } else {
+        window.open(src, "_blank", "noopener");
+      }
+    }
+
+    function approvePayment(id) {
+      const pay = payments.find(p => p.id === id);
+      if (!pay) return;
+      if (isDuplicatePayment(pay)) {
+        alert("สลิปนี้ซ้ำกับรายการอื่น กรุณาตรวจสอบก่อนอนุมัติ");
+        return;
+      }
+      const user = users[pay.username];
+      const pkg = getPackage(pay.packageId);
+      pay.status = "approved";
+      pay.approvedAt = new Date().toISOString();
+      user.packageId = pkg.id;
+      user.expire = addDays(user.expire, pkg.days);
+      user.status = "active";
+      logAdmin(`อนุมัติสลิป ${pay.username} / ${pkg.name} / ${pay.amount}฿`);
+      saveAll();
+      showToast("อนุมัติแล้ว ใช้งานได้ทันที");
+      renderAdmin();
+    }
+
+    function rejectPayment(id) {
+      const pay = payments.find(p => p.id === id);
+      if (!pay) return;
+      pay.status = "rejected";
+      logAdmin(`ไม่อนุมัติสลิป ${pay.username}`);
+      saveAll();
+      showToast("ไม่อนุมัติสลิปแล้ว");
+      renderAdmin();
+    }
+
+    function deletePayment(id) {
+      const pay = payments.find(p => p.id === id);
+      payments = payments.filter(p => p.id !== id);
+      if (pay) logAdmin(`ลบรายการสลิป ${pay.username}`);
+      saveAll();
+      showToast("ลบรายการสลิปแล้ว");
+      renderAdmin();
+    }
+
+    function renderMembers() {
+      const keyword = document.getElementById("memberSearch")?.value.toLowerCase() || "";
+      const rows = Object.values(users).filter(u => u.role !== "admin").filter(u => `${u.username} ${u.name} ${u.phone} ${u.line}`.toLowerCase().includes(keyword));
+      document.getElementById("memberRows").innerHTML = rows.map(u => `
+        <tr><td><button class="member-link" onclick="openMemberDetail('${u.username}')">${u.username}</button></td><td>${u.name || "-"}</td><td>${u.phone || "-"}</td><td>${u.line || "-"}</td><td>${getPackage(u.packageId)?.name || "-"}</td><td>${u.expire || "-"}</td><td><span class="badge ${memberStatus(u)}">${memberStatus(u)}</span></td>
+        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small red" onclick="suspendMember('${u.username}')">ระงับ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
+    }
+
+    function openMemberDetail(username) {
+      const user = users[username];
+      if (!user) return;
+      const userPayments = payments.filter(p => p.username === username).slice().reverse();
+      const approved = userPayments.filter(p => p.status === "approved");
+      document.getElementById("memberDetailTitle").textContent = `ข้อมูลสมาชิก: ${username}`;
+      document.getElementById("memberDetailBody").innerHTML = `
+        <div class="grid">
+          <div class="card"><h3>ข้อมูลหลัก</h3><div class="modal-list">
+            <div>ชื่อ: ${user.name || "-"}</div>
+            <div>เบอร์: ${user.phone || "-"}</div>
+            <div>LINE: ${user.line || "-"}</div>
+            <div>วันที่สมัคร: ${user.createdAt || "-"}</div>
+            <div>Login ล่าสุด: ${user.lastLogin || "-"}</div>
+            <div>IP ล่าสุด: ${user.lastIp || "local"}</div>
+          </div></div>
+          <div class="card"><h3>สมาชิก / แนะนำเพื่อน</h3><div class="modal-list">
+            <div>แพ็กเกจ: ${getPackage(user.packageId)?.name || "-"}</div>
+            <div>หมดอายุ: ${user.expire || "-"}</div>
+            <div>สถานะ: ${memberStatus(user)}</div>
+            <div>เครดิตแนะนำเพื่อน: ${user.credit || 0} บาท</div>
+            <div>ลิงก์ส่วนตัว: ?ref=${user.refCode || username}</div>
+          </div></div>
+        </div>
+        <h3 style="margin-top:14px;">ประวัติเติมเงิน / ต่ออายุ</h3>
+        <div class="table-wrap"><table><thead><tr><th>วันที่</th><th>แพ็กเกจ</th><th>ยอด</th><th>สถานะ</th></tr></thead><tbody>
+          ${userPayments.map(p => `<tr><td>${p.createdAt}</td><td>${getPackage(p.packageId)?.name || "-"}</td><td>${p.amount.toLocaleString()}฿</td><td><span class="badge ${p.status}">${p.status}</span></td></tr>`).join("") || "<tr><td colspan='4'>ยังไม่มีประวัติ</td></tr>"}
+        </tbody></table></div>
+        <p class="muted" style="margin-top:10px;">ต่ออายุสำเร็จแล้ว ${approved.length} ครั้ง</p>
+      `;
+      document.getElementById("memberDetailModal").classList.add("show");
+    }
+
+    function closeMemberDetail() {
+      document.getElementById("memberDetailModal").classList.remove("show");
+    }
+
+    function editMember(username) {
+      const u = users[username];
+      document.getElementById("adminUsername").value = u.username;
+      document.getElementById("adminUsername").disabled = true;
+      document.getElementById("adminPassword").value = u.password;
+      document.getElementById("adminName").value = u.name || "";
+      document.getElementById("adminPhone").value = u.phone || "";
+      document.getElementById("adminLine").value = u.line || "";
+      document.getElementById("adminPackage").value = u.packageId || packages[0]?.id || "";
+      document.getElementById("adminExpire").value = u.expire || "";
+      document.getElementById("adminStatus").value = u.status || "pending";
+    }
+
+    function saveMemberFromAdmin() {
+      const username = document.getElementById("adminUsername").value.trim();
+      const password = document.getElementById("adminPassword").value.trim();
+      if (!username || !password) return alert("กรุณากรอก username และ password");
+      users[username] = {
+        username, password, role: "member",
+        name: document.getElementById("adminName").value.trim(),
+        phone: document.getElementById("adminPhone").value.trim(),
+        line: document.getElementById("adminLine").value.trim(),
+        packageId: document.getElementById("adminPackage").value,
+        expire: document.getElementById("adminExpire").value,
+        status: document.getElementById("adminStatus").value,
+        createdAt: users[username]?.createdAt || todayText(),
+        lastLogin: users[username]?.lastLogin || "",
+        lastIp: users[username]?.lastIp || "local",
+        credit: users[username]?.credit || 0,
+        refCode: users[username]?.refCode || username
+      };
+      logAdmin(`บันทึกสมาชิก ${username}`);
+      saveAll();
+      clearAdminMemberForm();
+      showToast("บันทึกสมาชิกแล้ว");
+      renderAdmin();
+    }
+
+    function clearAdminMemberForm() {
+      ["adminUsername","adminPassword","adminName","adminPhone","adminLine","adminExpire"].forEach(id => document.getElementById(id).value = "");
+      document.getElementById("adminUsername").disabled = false;
+      document.getElementById("adminStatus").value = "pending";
+    }
+    function renewMember(username) {
+      const u = users[username];
+      const pkg = getPackage(u.packageId) || packages[0];
+      u.packageId = pkg.id;
+      u.expire = addDays(u.expire, pkg.days);
+      u.status = "active";
+      logAdmin(`ต่ออายุ ${username} / ${pkg.name}`);
+      saveAll(); renderAdmin(); showToast("ต่ออายุให้ลูกค้าแล้ว");
+    }
+    function suspendMember(username) {
+      users[username].status = "suspended";
+      logAdmin(`ระงับบัญชี ${username}`);
+      saveAll(); renderAdmin(); showToast("ระงับบัญชีแล้ว");
+    }
+
+    function renderCoupons() {
+      document.getElementById("couponRows").innerHTML = coupons.map(coupon => `
+        <tr><td>${coupon.code}</td><td>${coupon.type === "percent" ? "เปอร์เซ็นต์" : "บาท"}</td><td>${coupon.type === "percent" ? coupon.value + "%" : coupon.value + "฿"}</td><td><button class="btn small red" onclick="deleteCoupon('${coupon.code}')">ลบ</button></td></tr>
+      `).join("") || "<tr><td colspan='4'>ยังไม่มีคูปอง</td></tr>";
+    }
+
+    function saveCoupon() {
+      const code = document.getElementById("couponCode").value.trim().toUpperCase();
+      const type = document.getElementById("couponType").value;
+      const value = Number(document.getElementById("couponValue").value);
+      if (!code || !value) return alert("กรุณากรอกโค้ดและมูลค่าคูปอง");
+      coupons = coupons.filter(coupon => coupon.code !== code);
+      coupons.push({ code, type, value });
+      logAdmin(`บันทึกคูปอง ${code}`);
+      document.getElementById("couponCode").value = "";
+      document.getElementById("couponValue").value = "";
+      saveAll(); renderAdmin(); showToast("บันทึกคูปองแล้ว");
+    }
+
+    function deleteCoupon(code) {
+      coupons = coupons.filter(coupon => coupon.code !== code);
+      logAdmin(`ลบคูปอง ${code}`);
+      saveAll(); renderAdmin(); showToast("ลบคูปองแล้ว");
+    }
+
+    function renderAdminLogs() {
+      document.getElementById("adminLogRows").innerHTML = adminLogs.slice(0, 30).map(log => `<tr><td>${log.at}</td><td>${log.admin}</td><td>${log.action}</td></tr>`).join("") || "<tr><td colspan='3'>ยังไม่มี log</td></tr>";
+    }
+
+    function renderPackages() {
+      document.getElementById("packageRows").innerHTML = packages.map(pkg => `<tr><td>${pkg.name}</td><td>${pkg.days}</td><td>${pkg.price.toLocaleString()}฿</td><td><button class="btn small green" onclick="editPackage('${pkg.id}')">แก้ไข</button></td></tr>`).join("");
+    }
+    function editPackage(id) {
+      const pkg = getPackage(id);
+      document.getElementById("pkgName").value = pkg.name;
+      document.getElementById("pkgDays").value = pkg.days;
+      document.getElementById("pkgPrice").value = pkg.price;
+      document.getElementById("pkgName").dataset.editId = id;
+    }
+    function savePackage() {
+      const editId = document.getElementById("pkgName").dataset.editId;
+      const name = document.getElementById("pkgName").value.trim();
+      const days = Number(document.getElementById("pkgDays").value);
+      const price = Number(document.getElementById("pkgPrice").value);
+      if (!name || !days || !price) return alert("กรุณากรอกแพ็กเกจให้ครบ");
+      if (editId) {
+        const pkg = getPackage(editId);
+        Object.assign(pkg, { name, days, price });
+        logAdmin(`แก้ไขแพ็กเกจ ${name}`);
+      } else {
+        packages.push({ id: "pkg_" + Date.now(), name, days, price });
+        logAdmin(`เพิ่มแพ็กเกจ ${name}`);
+      }
+      delete document.getElementById("pkgName").dataset.editId;
+      document.getElementById("pkgName").value = "";
+      document.getElementById("pkgDays").value = "";
+      document.getElementById("pkgPrice").value = "";
+      saveAll(); renderAdmin(); renderLanding(); showToast("บันทึกแพ็กเกจแล้ว");
+    }
+    function saveAnnouncement() {
+      announcement = document.getElementById("announcementText").value.trim();
+      logAdmin("บันทึกประกาศ");
+      saveAll(); renderAdmin(); showToast("บันทึกประกาศแล้ว");
+    }
+
+    function restoreSession() {
+      const savedUsername = localStorage.getItem("rn_current_user");
+      if (!savedUsername || !users[savedUsername]) {
+        localStorage.removeItem("rn_current_user");
+        renderLanding();
+        renderNav();
+        setAuthTab("login");
+        return;
+      }
+
+      currentUser = users[savedUsername];
+      setAuthTab("login");
+      showPage(currentUser.role === "admin" ? "adminPage" : "memberPage");
+    }
+
+    restoreSession();
+  </script>
+</body>
+</html>

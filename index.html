@@ -552,21 +552,29 @@
       return `${username.toLowerCase()}@prompt-key.local`;
     }
 
+    function normalizeUsername(username) {
+      return username.trim().toLowerCase();
+    }
+
+    function findUsernameKey(username) {
+      const normalized = normalizeUsername(username);
+      return Object.keys(users).find(key => normalizeUsername(key) === normalized) || "";
+    }
+
     function authPassword(password) {
       return `${password}::prompt-key`;
     }
 
-    async function signInOrCreateAuth(username, password) {
+    async function signInAuth(username, password) {
       const email = authEmail(username);
       const secret = authPassword(password);
-      try {
-        return await auth.signInWithEmailAndPassword(email, secret);
-      } catch (error) {
-        if (error.code === "auth/user-not-found") {
-          return await auth.createUserWithEmailAndPassword(email, secret);
-        }
-        throw error;
-      }
+      return auth.signInWithEmailAndPassword(email, secret);
+    }
+
+    async function ensureLegacyAuth(username, password) {
+      const email = authEmail(username);
+      const secret = authPassword(password);
+      return auth.createUserWithEmailAndPassword(email, secret);
     }
 
     function publicUser(user) {
@@ -632,17 +640,24 @@
     }
 
     async function register() {
-      const username = document.getElementById("regUsername").value.trim();
+      const username = normalizeUsername(document.getElementById("regUsername").value);
       const password = document.getElementById("regPassword").value.trim();
       const name = document.getElementById("regName").value.trim();
       const phone = document.getElementById("regPhone").value.trim();
       const line = document.getElementById("regLine").value.trim();
       if (!username || !password || !name || !phone || !line) return alert("กรุณากรอกข้อมูลให้ครบ");
       if (!/^[a-zA-Z0-9_-]+$/.test(username)) return alert("Username ใช้ได้เฉพาะอังกฤษ ตัวเลข _ และ -");
+      if (findUsernameKey(username)) return alert("Username นี้ถูกใช้แล้ว");
+      let createdAuth = false;
       try {
         await auth.createUserWithEmailAndPassword(authEmail(username), authPassword(password));
+        createdAuth = true;
         await loadRemoteData();
-        if (users[username]) return alert("Username นี้ถูกใช้แล้ว");
+        if (findUsernameKey(username)) {
+          if (auth.currentUser && createdAuth) await auth.currentUser.delete().catch(() => {});
+          await auth.signOut().catch(() => {});
+          return alert("Username นี้ถูกใช้แล้ว");
+        }
       } catch (error) {
         if (error.code === "auth/email-already-in-use") return alert("Username นี้ถูกใช้แล้วในระบบล็อกอิน");
         return alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
@@ -656,21 +671,32 @@
     }
 
     async function login() {
-      const username = document.getElementById("loginUsername").value.trim();
+      const username = normalizeUsername(document.getElementById("loginUsername").value);
       const password = document.getElementById("loginPassword").value.trim();
       if (!username || !password) return alert("กรุณากรอก Username และ Password");
       try {
-        await signInOrCreateAuth(username, password);
+        await signInAuth(username, password);
         await loadRemoteData();
       } catch (error) {
-        return alert("Username หรือ Password ไม่ถูกต้อง");
+        const existingKey = findUsernameKey(username);
+        if (error.code === "auth/user-not-found" && existingKey) {
+          try {
+            await ensureLegacyAuth(existingKey, password);
+            await loadRemoteData();
+          } catch {
+            return alert("Username หรือ Password ไม่ถูกต้อง");
+          }
+        } else {
+          return alert("Username หรือ Password ไม่ถูกต้อง");
+        }
       }
-      const user = users[username];
+      const userKey = findUsernameKey(username);
+      const user = users[userKey];
       if (!user) return alert("ไม่พบข้อมูลสมาชิก กรุณาสมัครสมาชิกก่อน");
       user.lastLogin = new Date().toLocaleString("th-TH");
       user.lastIp = "local";
       currentUser = user;
-      localStorage.setItem("rn_current_user", username);
+      localStorage.setItem("rn_current_user", userKey);
       cleanUsersForSave();
       saveAll();
       showToast("เข้าสู่ระบบแล้ว");
@@ -1231,7 +1257,7 @@
       const u = users[username];
       document.getElementById("adminUsername").value = u.username;
       document.getElementById("adminUsername").disabled = true;
-      document.getElementById("adminPassword").value = u.password;
+      document.getElementById("adminPassword").value = "";
       document.getElementById("adminName").value = u.name || "";
       document.getElementById("adminPhone").value = u.phone || "";
       document.getElementById("adminLine").value = u.line || "";
@@ -1241,11 +1267,15 @@
     }
 
     function saveMemberFromAdmin() {
-      const username = document.getElementById("adminUsername").value.trim();
+      const username = normalizeUsername(document.getElementById("adminUsername").value);
       const password = document.getElementById("adminPassword").value.trim();
-      if (!username || !password) return alert("กรุณากรอก username และ password");
+      if (!username) return alert("กรุณากรอก username");
+      if (!/^[a-zA-Z0-9_-]+$/.test(username)) return alert("Username ใช้ได้เฉพาะอังกฤษ ตัวเลข _ และ -");
+      const editingLockedUser = document.getElementById("adminUsername").disabled;
+      const duplicatedKey = findUsernameKey(username);
+      if (!editingLockedUser && duplicatedKey) return alert("Username นี้ถูกใช้แล้ว");
       users[username] = {
-        username, password, role: "member",
+        username, role: "member",
         name: document.getElementById("adminName").value.trim(),
         phone: document.getElementById("adminPhone").value.trim(),
         line: document.getElementById("adminLine").value.trim(),

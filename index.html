@@ -441,7 +441,7 @@
     };
 
     let packages = load("rn_packages", defaultPackages);
-    let users = load("rn_users", defaultUsers);
+    let users = loadUsers();
     let payments = load("rn_payments", []);
     let usageHistory = load("rn_usage", []);
     let coupons = load("rn_coupons", [
@@ -457,6 +457,14 @@
     function load(key, fallback) {
       try { return JSON.parse(localStorage.getItem(key)) || structuredClone(fallback); }
       catch { return structuredClone(fallback); }
+    }
+
+    function loadUsers() {
+      const savedUsers = load("rn_users", {});
+      return {
+        ...structuredClone(defaultUsers),
+        ...savedUsers
+      };
     }
 
     function saveAll() {
@@ -540,7 +548,8 @@
       const username = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
       const user = users[username];
-      if (!user || user.password !== password) return alert("Username หรือ Password ไม่ถูกต้อง");
+      if (!user) return alert("ไม่พบ Username นี้ กรุณาสมัครสมาชิกก่อน หรือเพิ่มสมาชิกในหน้าแอดมิน");
+      if (String(user.password) !== password) return alert("Password ไม่ถูกต้อง");
       user.lastLogin = new Date().toLocaleString("th-TH");
       user.lastIp = "local";
       currentUser = user;

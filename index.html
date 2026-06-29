@@ -48,8 +48,6 @@
     .btn.gold { background: var(--gold); color: #111827; }
     .btn.full { width: 100%; }
     .btn.small { padding: 8px 11px; font-size: 13px; border-radius: 8px; }
-    .link-btn { background: transparent; color: var(--blue); font-weight: 700; padding: 6px 0; }
-    .link-btn:hover { text-decoration: underline; }
 
     .hero { min-height: 420px; border-radius: 22px; padding: 34px; background: linear-gradient(135deg, rgba(17, 24, 39, .9), rgba(22, 101, 52, .82)), url("https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1600&q=80"); background-size: cover; background-position: center; color: white; display: grid; align-content: center; box-shadow: var(--shadow); margin-bottom: 22px; }
     .hero h2 { font-size: clamp(34px, 6vw, 66px); line-height: 1.05; max-width: 820px; }
@@ -196,7 +194,7 @@
           <input class="field" id="loginUsername" placeholder="Username">
           <input class="field" id="loginPassword" type="password" placeholder="Password">
           <button class="btn full" onclick="login()">เข้าสู่ระบบ</button>
-          <button class="link-btn" style="margin-top:10px;" onclick="setAuthTab('forgot')">ลืมรหัสผ่าน?</button>
+          <p class="muted" style="margin-top:10px;">แอดมินทดลอง: admin / 1234</p>
         </div>
 
         <div id="registerForm" class="hidden">
@@ -207,16 +205,6 @@
           <input class="field" id="regUsername" placeholder="Username">
           <input class="field" id="regPassword" type="password" placeholder="Password">
           <button class="btn green full" onclick="register()">สมัครสมาชิก</button>
-        </div>
-
-        <div id="forgotForm" class="hidden">
-          <h2>ลืมรหัสผ่าน</h2>
-          <p class="muted" style="margin-bottom:10px;">ส่งข้อมูลให้แอดมินตรวจสอบ แล้วแอดมินจะติดต่อกลับทาง LINE</p>
-          <input class="field" id="forgotUsername" placeholder="Username">
-          <input class="field" id="forgotPhone" placeholder="เบอร์โทร">
-          <input class="field" id="forgotLine" placeholder="LINE ID">
-          <button class="btn green full" onclick="submitPasswordResetRequest()">ส่งคำขอรีเซ็ตรหัส</button>
-          <button class="btn gray full" style="margin-top:8px;" onclick="setAuthTab('login')">กลับไปเข้าสู่ระบบ</button>
         </div>
       </section>
     </main>
@@ -240,6 +228,13 @@
           <div class="special-item back" onclick="selectPresetNumbers('doubleBack')">ชุดเบิ้ลหลัง</div>
           <div class="special-item sibling" onclick="selectPresetNumbers('sibling')">เลขพี่น้อง</div>
           <div class="special-item prahan" onclick="selectPresetNumbers('prahan')">ชุดประหาร</div>
+          <div class="special-item gold" onclick="selectPresetNumbers('doubleTwo')">เบิ้ล</div>
+          <div class="special-item front" onclick="selectPresetNumbers('female')">ตัวเมีย</div>
+          <div class="special-item back" onclick="selectPresetNumbers('affair')">เลขชู้</div>
+          <div class="special-item gold" onclick="selectPresetNumbers('tenPoint')">สิบแต้ม</div>
+          <div class="special-item ham" onclick="selectPresetNumbers('runThree')">เรียง</div>
+          <div class="special-item prahan" onclick="selectPresetNumbers('hardWorking')">เลขขยัน</div>
+          <div class="special-item sibling" onclick="selectPresetNumbers('siblingSwipe')">รูดพี่น้อง</div>
         </div>
       </section>
 
@@ -280,39 +275,6 @@
       </section>
 
       <div class="grid4" id="memberStats" style="margin-top:16px;"></div>
-    </main>
-
-    <main id="profilePage" class="hidden">
-      <div class="dash-head">
-        <div>
-          <h2>โปรไฟล์</h2>
-          <p class="muted">ข้อมูลบัญชี แพ็กเกจ และการตั้งค่ารหัสผ่าน</p>
-        </div>
-        <button class="btn dark" onclick="showPage('memberPage')">กลับหน้าหลัก</button>
-      </div>
-
-      <div class="grid4" id="profileStats" style="margin-top:16px;"></div>
-
-      <div class="grid" style="margin-top:16px;">
-        <section class="card">
-          <h3>ข้อมูลส่วนตัว</h3>
-          <p class="muted" style="margin-bottom:10px;">Username แก้ไม่ได้ ถ้าต้องเปลี่ยนให้ติดต่อแอดมิน</p>
-          <input class="field" id="profileUsername" placeholder="Username" disabled>
-          <input class="field" id="profileName" placeholder="ชื่อ">
-          <input class="field" id="profilePhone" placeholder="เบอร์โทร">
-          <input class="field" id="profileLine" placeholder="LINE ID">
-          <button class="btn green full" onclick="saveProfile()">บันทึกข้อมูลโปรไฟล์</button>
-        </section>
-
-        <section class="card">
-          <h3>เปลี่ยนรหัสผ่าน</h3>
-          <p class="muted" style="margin-bottom:10px;">ใช้รหัสเดิมเพื่อยืนยันก่อนตั้งรหัสใหม่</p>
-          <input class="field" id="memberOldPassword" type="password" placeholder="รหัสเดิม">
-          <input class="field" id="memberNewPassword" type="password" placeholder="รหัสใหม่">
-          <input class="field" id="memberConfirmPassword" type="password" placeholder="ยืนยันรหัสใหม่">
-          <button class="btn green full" onclick="changeOwnPassword('memberOldPassword','memberNewPassword','memberConfirmPassword')">บันทึกรหัสใหม่</button>
-        </section>
-      </div>
     </main>
 
     <main id="paymentHistoryPage" class="hidden">
@@ -363,17 +325,6 @@
       <div class="notice-grid" id="adminNotices"></div>
       <div class="grid4" id="adminStats"></div>
 
-      <section class="card" style="margin-top:16px;">
-        <h3>เปลี่ยนรหัสแอดมิน</h3>
-        <p class="muted" style="margin-bottom:10px;">เปลี่ยนรหัสของบัญชีแอดมินที่กำลังเข้าสู่ระบบอยู่</p>
-        <div class="grid3">
-          <input class="field" id="adminOldPassword" type="password" placeholder="รหัสเดิม">
-          <input class="field" id="adminNewPassword" type="password" placeholder="รหัสใหม่">
-          <input class="field" id="adminConfirmPassword" type="password" placeholder="ยืนยันรหัสใหม่">
-        </div>
-        <button class="btn green" onclick="changeOwnPassword('adminOldPassword','adminNewPassword','adminConfirmPassword')">บันทึกรหัสใหม่</button>
-      </section>
-
       <div class="grid" style="margin-top:16px;">
         <section class="card">
           <h3>กราฟรายได้ 7 วัน</h3>
@@ -388,12 +339,6 @@
       <section class="card" style="margin-top:16px;">
         <h3>สลิปรออนุมัติ</h3>
         <div class="table-wrap"><table><thead><tr><th>วันที่</th><th>สมาชิก</th><th>แพ็กเกจ</th><th>ยอด</th><th>สลิป</th><th>จัดการ</th></tr></thead><tbody id="pendingSlipRows"></tbody></table></div>
-      </section>
-
-      <section class="card" style="margin-top:16px;">
-        <h3>คำขอลืมรหัสผ่าน</h3>
-        <p class="muted" style="margin-bottom:10px;">ลูกค้าส่งคำขอจากหน้า Login แล้วแอดมินติดต่อกลับทาง LINE/เบอร์โทร</p>
-        <div class="table-wrap"><table><thead><tr><th>วันที่</th><th>Username</th><th>เบอร์</th><th>LINE</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="passwordRequestRows"></tbody></table></div>
       </section>
 
       <section class="card" style="margin-top:16px;">
@@ -482,24 +427,7 @@
 
   <div class="toast" id="toast">บันทึกแล้ว</div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCn5gcJIRgJedry5CBWMyDOhMPXnlfJJwM",
-      authDomain: "prompt-key-d1829.firebaseapp.com",
-      projectId: "prompt-key-d1829",
-      storageBucket: "prompt-key-d1829.firebasestorage.app",
-      messagingSenderId: "100030376916",
-      appId: "1:100030376916:web:dfde61893c6bd3ff980441",
-      measurementId: "G-DR0J980KYL"
-    };
-
-    const firebaseApp = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
     const defaultPackages = [
       { id: "p1", name: "1 เดือน", days: 30, price: 159 },
       { id: "p3", name: "3 เดือน", days: 90, price: 399 },
@@ -521,15 +449,10 @@
       { code: "WELCOME10", type: "percent", value: 10 }
     ]);
     let adminLogs = load("rn_admin_logs", []);
-    let passwordRequests = load("rn_password_requests", []);
     let announcement = load("rn_announcement", "โปรลดราคาเฉพาะเดือนนี้ ติดต่อ LINE OA เพื่อรับสิทธิ์");
     let currentUser = null;
     let selectedPackageId = null;
     let calcStore = {};
-    let remoteReady = false;
-    let saveTimer = null;
-    let suppressHistoryPush = false;
-    const appPages = ["landingPage", "authPage", "memberPage", "profilePage", "renewPage", "paymentHistoryPage", "adminPage"];
 
     function load(key, fallback) {
       try { return JSON.parse(localStorage.getItem(key)) || structuredClone(fallback); }
@@ -537,157 +460,13 @@
     }
 
     function saveAll() {
-      cleanUsersForSave();
       localStorage.setItem("rn_packages", JSON.stringify(packages));
       localStorage.setItem("rn_users", JSON.stringify(users));
       localStorage.setItem("rn_payments", JSON.stringify(payments));
       localStorage.setItem("rn_usage", JSON.stringify(usageHistory));
       localStorage.setItem("rn_coupons", JSON.stringify(coupons));
       localStorage.setItem("rn_admin_logs", JSON.stringify(adminLogs));
-      localStorage.setItem("rn_password_requests", JSON.stringify(passwordRequests));
       localStorage.setItem("rn_announcement", JSON.stringify(announcement));
-      queueRemoteSave();
-    }
-
-    function stateData() {
-      const cleanUsers = {};
-      Object.keys(users).forEach(username => cleanUsers[username] = publicUser(users[username]));
-      return { packages, users: cleanUsers, usageHistory, coupons, adminLogs, passwordRequests, announcement, updatedAt: new Date().toISOString() };
-    }
-
-    async function loadRemoteData() {
-      try {
-        const stateRef = db.collection("app").doc("state");
-        const stateSnap = await stateRef.get();
-        if (stateSnap.exists) {
-          const data = stateSnap.data();
-          packages = data.packages || defaultPackages;
-          users = data.users || defaultUsers;
-          usageHistory = data.usageHistory || [];
-          coupons = data.coupons || coupons;
-          adminLogs = data.adminLogs || [];
-          passwordRequests = data.passwordRequests || [];
-          announcement = data.announcement || announcement;
-        } else {
-          await stateRef.set(stateData());
-        }
-
-        const paymentSnap = await db.collection("payments").get();
-        payments = paymentSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        remoteReady = true;
-        persistLocalOnly();
-      } catch (error) {
-        console.warn("Firebase load failed, using local data", error);
-        remoteReady = false;
-        showToast("เชื่อมฐานข้อมูลไม่ได้ ใช้ข้อมูลในเครื่องชั่วคราว");
-      }
-    }
-
-    function persistLocalOnly() {
-      localStorage.setItem("rn_packages", JSON.stringify(packages));
-      localStorage.setItem("rn_users", JSON.stringify(users));
-      localStorage.setItem("rn_payments", JSON.stringify(payments));
-      localStorage.setItem("rn_usage", JSON.stringify(usageHistory));
-      localStorage.setItem("rn_coupons", JSON.stringify(coupons));
-      localStorage.setItem("rn_admin_logs", JSON.stringify(adminLogs));
-      localStorage.setItem("rn_password_requests", JSON.stringify(passwordRequests));
-      localStorage.setItem("rn_announcement", JSON.stringify(announcement));
-    }
-
-    function queueRemoteSave() {
-      if (!remoteReady) return;
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        saveRemoteData().catch(error => {
-          console.warn("Firebase save failed", error);
-          showToast("บันทึกขึ้นฐานข้อมูลไม่สำเร็จ");
-        });
-      }, 250);
-    }
-
-    async function saveRemoteData() {
-      await db.collection("app").doc("state").set(stateData(), { merge: true });
-      await Promise.all(payments.map(payment => db.collection("payments").doc(payment.id).set(payment, { merge: true })));
-    }
-
-    async function deleteRemotePayment(id) {
-      if (!remoteReady) return;
-      try { await db.collection("payments").doc(id).delete(); }
-      catch (error) { console.warn("Firebase delete payment failed", error); }
-    }
-
-    async function deleteRemotePayments(ids) {
-      if (!remoteReady || !ids.length) return;
-      await Promise.all(ids.map(id => deleteRemotePayment(id)));
-    }
-
-    function authEmail(username) {
-      return `${username.toLowerCase()}@prompt-key.local`;
-    }
-
-    function normalizeUsername(username) {
-      return username.trim().toLowerCase();
-    }
-
-    function findUsernameKey(username) {
-      const normalized = normalizeUsername(username);
-      return Object.keys(users).find(key => normalizeUsername(key) === normalized) || "";
-    }
-
-    function authPassword(password) {
-      return `${password}::prompt-key`;
-    }
-
-    function getDeviceId() {
-      const key = "pk_device_id";
-      let id = localStorage.getItem(key);
-      if (!id) {
-        id = "dev_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-        localStorage.setItem(key, id);
-      }
-      return id;
-    }
-
-    async function signInAuth(username, password) {
-      const email = authEmail(username);
-      const secret = authPassword(password);
-      return auth.signInWithEmailAndPassword(email, secret);
-    }
-
-    async function ensureLegacyAuth(username, password) {
-      const email = authEmail(username);
-      const secret = authPassword(password);
-      return auth.createUserWithEmailAndPassword(email, secret);
-    }
-
-    function publicUser(user) {
-      const { password, ...clean } = user;
-      return clean;
-    }
-
-    function cleanUsersForSave() {
-      Object.keys(users).forEach(username => {
-        users[username] = publicUser(users[username]);
-      });
-    }
-
-    async function changeOwnPassword(oldId, newId, confirmId) {
-      const oldPassword = document.getElementById(oldId).value.trim();
-      const newPassword = document.getElementById(newId).value.trim();
-      const confirmPassword = document.getElementById(confirmId).value.trim();
-      if (!currentUser || !auth.currentUser) return alert("กรุณาเข้าสู่ระบบใหม่ก่อนเปลี่ยนรหัส");
-      if (!oldPassword || !newPassword || !confirmPassword) return alert("กรุณากรอกรหัสให้ครบ");
-      if (newPassword !== confirmPassword) return alert("รหัสใหม่และยืนยันรหัสไม่ตรงกัน");
-      if (newPassword.length < 4) return alert("รหัสใหม่ควรมีอย่างน้อย 4 ตัวอักษร");
-      try {
-        const credential = firebase.auth.EmailAuthProvider.credential(authEmail(currentUser.username), authPassword(oldPassword));
-        await auth.currentUser.reauthenticateWithCredential(credential);
-        await auth.currentUser.updatePassword(authPassword(newPassword));
-        [oldId, newId, confirmId].forEach(id => document.getElementById(id).value = "");
-        showToast("เปลี่ยนรหัสผ่านแล้ว");
-      } catch (error) {
-        alert("เปลี่ยนรหัสไม่สำเร็จ กรุณาตรวจรหัสเดิมอีกครั้ง");
-      }
     }
 
     function showToast(text) {
@@ -698,37 +477,14 @@
     }
 
     function showPage(id) {
-      appPages.forEach(page => document.getElementById(page).classList.add("hidden"));
+      ["landingPage", "authPage", "memberPage", "renewPage", "paymentHistoryPage", "adminPage"].forEach(page => document.getElementById(page).classList.add("hidden"));
       document.getElementById(id).classList.remove("hidden");
-      updatePageHistory(id);
       renderNav();
       if (id === "landingPage") renderLanding();
       if (id === "memberPage") renderMember();
-      if (id === "profilePage") renderProfilePage();
       if (id === "renewPage") renderRenewPage();
       if (id === "paymentHistoryPage") renderPaymentHistoryPage();
       if (id === "adminPage") renderAdmin();
-    }
-
-    function updatePageHistory(id) {
-      if (suppressHistoryPush || !appPages.includes(id)) return;
-      const targetHash = `#${id}`;
-      if (location.hash === targetHash) {
-        history.replaceState({ page: id }, "", targetHash);
-      } else {
-        history.pushState({ page: id }, "", targetHash);
-      }
-    }
-
-    function pageFromHash() {
-      const hashPage = location.hash.replace("#", "");
-      return appPages.includes(hashPage) ? hashPage : "";
-    }
-
-    function showPageFromHistory(id) {
-      suppressHistoryPush = true;
-      showPage(id);
-      suppressHistoryPush = false;
     }
 
     function renderNav() {
@@ -742,7 +498,6 @@
       }
       nav.innerHTML = `
         <button class="btn" onclick="showPage('${currentUser.role === "admin" ? "adminPage" : "memberPage"}')">หน้าหลัก</button>
-        ${currentUser.role === "member" ? `<button class="btn" onclick="showPage('profilePage')">โปรไฟล์</button>` : ""}
         ${currentUser.role === "member" ? `<button class="btn green" onclick="showPage('renewPage')">ต่ออายุ</button>` : ""}
         ${currentUser.role === "member" ? `<button class="btn" onclick="showPage('paymentHistoryPage')">ประวัติชำระเงิน</button>` : ""}
         <button class="btn dark" onclick="logout()">ออกจากระบบ</button>`;
@@ -763,128 +518,41 @@
       document.getElementById("registerTab").classList.toggle("active", tab === "register");
       document.getElementById("loginForm").classList.toggle("hidden", tab !== "login");
       document.getElementById("registerForm").classList.toggle("hidden", tab !== "register");
-      document.getElementById("forgotForm").classList.toggle("hidden", tab !== "forgot");
     }
 
-    async function register() {
-      const username = normalizeUsername(document.getElementById("regUsername").value);
+    function register() {
+      const username = document.getElementById("regUsername").value.trim();
       const password = document.getElementById("regPassword").value.trim();
       const name = document.getElementById("regName").value.trim();
       const phone = document.getElementById("regPhone").value.trim();
       const line = document.getElementById("regLine").value.trim();
       if (!username || !password || !name || !phone || !line) return alert("กรุณากรอกข้อมูลให้ครบ");
       if (!/^[a-zA-Z0-9_-]+$/.test(username)) return alert("Username ใช้ได้เฉพาะอังกฤษ ตัวเลข _ และ -");
-      if (findUsernameKey(username)) return alert("Username นี้ถูกใช้แล้ว");
-      let createdAuth = false;
-      try {
-        await auth.createUserWithEmailAndPassword(authEmail(username), authPassword(password));
-        createdAuth = true;
-        await loadRemoteData();
-        if (findUsernameKey(username)) {
-          if (auth.currentUser && createdAuth) await auth.currentUser.delete().catch(() => {});
-          await auth.signOut().catch(() => {});
-          return alert("Username นี้ถูกใช้แล้ว");
-        }
-      } catch (error) {
-        if (error.code === "auth/email-already-in-use") return alert("Username นี้ถูกใช้แล้วในระบบล็อกอิน");
-        return alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
-      }
-      users[username] = { username, role: "member", name, phone, line, status: "pending", packageId: "", expire: "", createdAt: todayText(), lastLogin: "", lastIp: "local", credit: 0, refCode: username };
-      cleanUsersForSave();
+      if (users[username]) return alert("Username นี้ถูกใช้แล้ว");
+      users[username] = { username, password, role: "member", name, phone, line, status: "pending", packageId: "", expire: "", createdAt: todayText(), lastLogin: "", lastIp: "local", credit: 0, refCode: username };
       saveAll();
       showToast("สมัครสมาชิกแล้ว กรุณาเข้าสู่ระบบและเลือกแพ็กเกจ");
       setAuthTab("login");
       document.getElementById("loginUsername").value = username;
     }
 
-    async function submitPasswordResetRequest() {
-      const username = normalizeUsername(document.getElementById("forgotUsername").value);
-      const phone = document.getElementById("forgotPhone").value.trim();
-      const line = document.getElementById("forgotLine").value.trim();
-      if (!username || !phone || !line) return alert("กรุณากรอก Username เบอร์โทร และ LINE ID");
-
-      try {
-        if (!auth.currentUser) await auth.signInAnonymously();
-        await loadRemoteData();
-        const duplicatePending = passwordRequests.some(req =>
-          normalizeUsername(req.username) === username && req.status === "pending"
-        );
-        if (duplicatePending) {
-          await auth.signOut().catch(() => {});
-          return alert("มีคำขอของ Username นี้รอแอดมินอยู่แล้วค่ะ");
-        }
-        passwordRequests.unshift({
-          id: `reset_${Date.now()}`,
-          username,
-          phone,
-          line,
-          status: "pending",
-          createdAt: new Date().toLocaleString("th-TH")
-        });
-        passwordRequests = passwordRequests.slice(0, 100);
-        persistLocalOnly();
-        await saveRemoteData();
-        await auth.signOut().catch(() => {});
-        localStorage.removeItem("rn_current_user");
-        document.getElementById("forgotUsername").value = "";
-        document.getElementById("forgotPhone").value = "";
-        document.getElementById("forgotLine").value = "";
-        alert("ส่งคำขอแล้วค่ะ รอแอดมินติดต่อกลับทาง LINE");
-        setAuthTab("login");
-      } catch (error) {
-        console.warn("Password reset request failed", error);
-        if (error.code === "auth/admin-restricted-operation" || error.code === "auth/operation-not-allowed") {
-          return alert("ยังไม่ได้เปิด Anonymous ใน Firebase ค่ะ ให้เปิด Authentication > Sign-in method > Anonymous ก่อน");
-        }
-        alert("ส่งคำขอไม่สำเร็จ กรุณาติดต่อ LINE OA");
-      }
-    }
-
-    async function login() {
-      const username = normalizeUsername(document.getElementById("loginUsername").value);
+    function login() {
+      const username = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
-      if (!username || !password) return alert("กรุณากรอก Username และ Password");
-      try {
-        await signInAuth(username, password);
-        await loadRemoteData();
-      } catch (error) {
-        const existingKey = findUsernameKey(username);
-        if (error.code === "auth/user-not-found" && existingKey) {
-          try {
-            await ensureLegacyAuth(existingKey, password);
-            await loadRemoteData();
-          } catch {
-            return alert("Username หรือ Password ไม่ถูกต้อง");
-          }
-        } else {
-          return alert("Username หรือ Password ไม่ถูกต้อง");
-        }
-      }
-      const userKey = findUsernameKey(username);
-      const user = users[userKey];
-      if (!user) return alert("ไม่พบข้อมูลสมาชิก กรุณาสมัครสมาชิกก่อน");
-      const deviceId = getDeviceId();
-      if (user.role !== "admin") {
-        if (user.deviceId && user.deviceId !== deviceId) {
-          await auth.signOut().catch(() => {});
-          return alert("บัญชีนี้ผูกกับเครื่องอื่นแล้ว กรุณาติดต่อแอดมินเพื่อปลดเครื่อง");
-        }
-        if (!user.deviceId) user.deviceId = deviceId;
-      }
+      const user = users[username];
+      if (!user || user.password !== password) return alert("Username หรือ Password ไม่ถูกต้อง");
       user.lastLogin = new Date().toLocaleString("th-TH");
       user.lastIp = "local";
       currentUser = user;
-      localStorage.setItem("rn_current_user", userKey);
-      cleanUsersForSave();
+      localStorage.setItem("rn_current_user", username);
       saveAll();
       showToast("เข้าสู่ระบบแล้ว");
       showPage(user.role === "admin" ? "adminPage" : "memberPage");
     }
 
-    async function logout() {
+    function logout() {
       currentUser = null;
       localStorage.removeItem("rn_current_user");
-      try { await auth.signOut(); } catch {}
       showToast("ออกจากระบบแล้ว");
       showPage("landingPage");
     }
@@ -935,46 +603,8 @@
       document.getElementById("calculatorPanel").style.opacity = canUseFeature(currentUser) ? "1" : ".45";
     }
 
-    function renderProfilePage() {
-      currentUser = users[currentUser.username];
-      const pkg = getPackage(currentUser.packageId);
-      const left = Math.max(0, daysLeft(currentUser.expire));
-      const status = memberStatus(currentUser);
-      document.getElementById("profileStats").innerHTML = `
-        <div class="stat">Username<strong>${currentUser.username}</strong></div>
-        <div class="stat">แพ็กเกจ<strong>${pkg ? pkg.name : "-"}</strong></div>
-        <div class="stat">วันหมดอายุ<strong>${currentUser.expire || "-"}</strong></div>
-        <div class="stat">วันที่เหลือ<strong>${left}</strong></div>
-        <div class="stat">สถานะ<strong><span class="badge ${status}">${status}</span></strong></div>
-        <div class="stat">เครื่องที่ผูก<strong>${currentUser.deviceId ? "ผูกแล้ว" : "ยังไม่ผูก"}</strong></div>
-        <div class="stat">สมัครเมื่อ<strong>${currentUser.createdAt || "-"}</strong></div>
-        <div class="stat">เข้าใช้ล่าสุด<strong>${currentUser.lastLogin || "-"}</strong></div>`;
-      document.getElementById("profileUsername").value = currentUser.username || "";
-      document.getElementById("profileName").value = currentUser.name || "";
-      document.getElementById("profilePhone").value = currentUser.phone || "";
-      document.getElementById("profileLine").value = currentUser.line || "";
-    }
-
-    function saveProfile() {
-      if (!currentUser) return alert("กรุณาเข้าสู่ระบบก่อน");
-      const user = users[currentUser.username];
-      if (!user) return alert("ไม่พบข้อมูลสมาชิก");
-      const name = document.getElementById("profileName").value.trim();
-      const phone = document.getElementById("profilePhone").value.trim();
-      const line = document.getElementById("profileLine").value.trim();
-      if (!name || !phone || !line) return alert("กรุณากรอกชื่อ เบอร์โทร และ LINE ID ให้ครบ");
-      user.name = name;
-      user.phone = phone;
-      user.line = line;
-      currentUser = user;
-      saveAll();
-      renderProfilePage();
-      showToast("บันทึกโปรไฟล์แล้ว");
-    }
-
     function renderRenewPage() {
       currentUser = users[currentUser.username];
-      selectedPackageId = null;
       document.getElementById("memberPackages").innerHTML = packages.map(pkg => `
         <div class="card">
           <h3>${pkg.name}</h3>
@@ -998,25 +628,6 @@
     function selectPackage(packageId) {
       selectedPackageId = packageId;
       const pkg = getPackage(packageId);
-      document.getElementById("paymentPanel").innerHTML = `
-        <div class="card" style="box-shadow:none;">
-          <h3>ยืนยันแพ็กเกจ</h3>
-          <p class="muted">ตรวจสอบแพ็กเกจก่อนแสดง QR สำหรับโอนเงิน</p>
-          <div class="price">${pkg.price.toLocaleString()}฿</div>
-          <p><strong>${pkg.name}</strong> / ${pkg.days} วัน</p>
-          <button class="btn green full" style="margin-top:12px;" onclick="confirmPackagePayment()">ยืนยันสมัคร / ต่ออายุ</button>
-          <button class="btn gray full" style="margin-top:10px;" onclick="cancelPackagePayment()">เลือกแพ็กเกจใหม่</button>
-        </div>`;
-    }
-
-    function cancelPackagePayment() {
-      selectedPackageId = null;
-      document.getElementById("paymentPanel").innerHTML = "เลือกแพ็กเกจก่อน ระบบจะแสดง QR และยอดชำระ";
-    }
-
-    function confirmPackagePayment() {
-      if (!selectedPackageId) return alert("กรุณาเลือกแพ็กเกจก่อน");
-      const pkg = getPackage(selectedPackageId);
       const qrFile = getQrByPrice(pkg.price);
       const qrHtml = qrFile
         ? `<a class="qr-link" href="${qrFile}" target="_blank" rel="noopener" title="เปิด QR ขนาดใหญ่"><img class="qr-img" src="${qrFile}" alt="QR พร้อมเพย์ ${pkg.price.toLocaleString()} บาท"></a>`
@@ -1035,7 +646,6 @@
             <input class="field" id="slipFile" type="file" accept="image/*" onchange="previewSelectedSlip()">
             <img class="slip-thumb" id="selectedSlipPreview" alt="ตัวอย่างสลิปที่เลือก">
             <button class="btn green" onclick="uploadSlip()">อัปโหลดสลิป</button>
-            <button class="btn gray" style="margin-left:8px;" onclick="selectPackage('${pkg.id}')">ย้อนกลับ</button>
           </div>
         </div>`;
     }
@@ -1050,23 +660,6 @@
         reader.onload = () => resolve(reader.result);
         reader.onerror = reject;
         reader.readAsDataURL(file);
-      });
-    }
-
-    function resizeImageDataUrl(dataUrl, maxWidth = 900, quality = 0.72) {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.onload = () => {
-          const scale = Math.min(1, maxWidth / img.width);
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL("image/jpeg", quality));
-        };
-        img.onerror = () => resolve(dataUrl);
-        img.src = dataUrl;
       });
     }
 
@@ -1116,8 +709,7 @@
       if (!file.type.startsWith("image/")) return alert("กรุณาอัปโหลดไฟล์รูปภาพเท่านั้น");
       const pkg = getPackage(selectedPackageId);
       const preview = document.getElementById("selectedSlipPreview");
-      const rawSlipDataUrl = preview.dataset.dataUrl || await readFileAsDataUrl(file);
-      const slipDataUrl = await resizeImageDataUrl(rawSlipDataUrl);
+      const slipDataUrl = preview.dataset.dataUrl || await readFileAsDataUrl(file);
       const slipHash = hashText(slipDataUrl);
       const duplicate = findDuplicateSlip(slipHash);
       if (duplicate) {
@@ -1242,48 +834,70 @@
       await navigator.clipboard.writeText(decodeURIComponent(encoded));
       showToast(`คัดลอกชุด ${label} แล้ว`);
     }
+    const presetNumberSets = {
+      sibling: {
+        label: "พี่น้อง",
+        items: ["01","12","23","34","45","56","67","78","89","90"]
+      },
+      doubleTwo: {
+        label: "เบิ้ล",
+        items: ["00","11","22","33","44","55","66","77","88","99"]
+      },
+      female: {
+        label: "ตัวเมีย",
+        items: ["02","13","24","35","80","46","57","68","79","91"]
+      },
+      affair: {
+        label: "เลขชู้",
+        items: ["03","14","25","36","47","58","69","70","81","92"]
+      },
+      tenPoint: {
+        label: "สิบแต้ม",
+        items: ["10","28","46","19","37","55"]
+      },
+      runThree: {
+        label: "เรียง",
+        items: ["012","123","234","345","456","567","789","890","091"]
+      },
+      hardWorking: {
+        label: "เลขขยัน",
+        items: ["36","37","38","46","47","48","56","57","58","96","97","98","67","68","78","39","49","59","63","73","83","64","74","84","65","75","85","69","79","89","76","86","87","93","94","95"]
+      },
+      siblingSwipe: {
+        label: "รูดพี่น้อง",
+        items: ["01","12","23","34","45","56","67","78","89","90","09","98","87","76","65","54","43","32","21","10"]
+      },
+      doubleFront: {
+        label: "เบิ้ลหน้า",
+        items: ["001","443","553","663","335","445","554","664","002","113","223","332","442","003","114","224","334","004","115","225","005","116","226","336","006","117","227","337","007","118","228","338","008","119","229","339","446","556","665","447","557","667","448","558","668","449","559","669","009","110","220","330","440","550","660","112","221","331","441","551","661","771","552","662","772","773","774","881","882","883","884","775","885","776","886","778","887","779","889","770","880","990","991","992","993","994","995","996","997","998"]
+      },
+      doubleBack: {
+        label: "เบิ้ลหลัง",
+        items: ["100","200","300","400","500","600","700","800","900","211","311","411","511","611","711","811","911","011","122","322","422","522","622","722","822","922","022","133","233","433","533","633","733","833","933","033","144","244","344","544","644","744","844","944","044","155","255","355","455","655","755","855","955","055","166","266","366","466","566","766","866","966","066","177","277","377","477","577","677","877","977","077","188","288","388","488","588","688","788","988","088","199","299","399","499","599","699","799","899","099"]
+      },
+      ham: {
+        label: "หาม",
+        items: ["010","020","030","121","212","313","414","515","616","131","232","323","424","525","141","242","343","434","535","636","252","353","454","545","050","161","262","363","464","060","171","272","373","040","151","646","565","656","474","575","676","484","585","070","181","282","383","080","191","292","393","494","595","090","101","202","303","404","505","717","818","828","626","727","919","929","939","949","959","737","838","747","848","757","858","767","868","969","686","787","878","979","696","797","898","989","606","707","808","909"]
+      },
+      prahan: {
+        label: "ประหาร",
+        items: ["010","020","030","121","212","313","414","515","616","131","232","323","424","525","141","242","343","434","535","636","252","353","454","545","050","161","262","363","464","060","171","272","373","040","151","646","565","656","474","575","676","484","585","070","181","282","383","080","191","292","393","494","595","090","101","202","303","404","505","717","818","828","626","727","919","929","939","949","959","737","838","747","848","757","858","767","868","969","686","787","878","979","696","797","898","989","606","707","808","909"]
+      }
+    };
+
     function selectPresetNumbers(type) {
       if (!canUseFeature(currentUser)) return alert("สมาชิกยังใช้งานไม่ได้");
-      let label = "";
-      let items = [];
-      if (type === "ham") {
-        label = "ชุดหาม";
-        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) items.push(`${a}${b}${a}`);
-      } else if (type === "doubleFront") {
-        label = "ชุดเบิ้ลหน้า";
-        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) items.push(`${a}${a}${b}`);
-      } else if (type === "doubleBack") {
-        label = "ชุดเบิ้ลหลัง";
-        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) items.push(`${a}${b}${b}`);
-      } else if (type === "sibling") {
-        label = "เลขพี่น้อง";
-        items = ["01","09","10","12","21","23","32","34","43","45","54","56","65","67","76","78","87","89","90","98"];
-      } else if (type === "prahan") {
-        label = "ชุดประหาร";
-        const set = new Set();
-        for (let a = 0; a <= 9; a++) for (let b = 0; b <= 9; b++) if (a !== b) {
-          set.add(`${a}${b}${a}`); set.add(`${a}${a}${b}`); set.add(`${a}${b}${b}`);
-        }
-        items = [...set].sort();
-      } else if (type === "012") {
-        label = "ชุด 012";
-        items = ["012","013","014","015","017","019","023","024","025","027","029","034","035","037","039","045","047","049","057","059","079","123","124","125","127","129","134","135","137","139","145","147","149","157","159","179","234","235","237","239","245","247","249","257","259","279","345","347","349","357","359","379","457","459","479","579"];
-      } else if (type === "012n9") {
-        label = "ชุด 012 ไม่มี 9";
-        items = ["012","013","014","015","016","017","018","023","024","026","025","027","028","034","035","036","037","038","045","047","048","056","057","058","076","086","123","124","126","127","128","134","136","135","137","138","146","147","148","156","157","158","176","178","234","235","236","237","238","246","247","248","256","257","258","276","278","346","345","347","348","356","357","358","368","376","378","456","457","458","468","476","478","576","578","586","678","769","869"];
-      } else if (type === "123") {
-        label = "ชุด 123";
-        items = ["123","124","125","127","128","129","134","135","137","138","139","145","147","148","149","157","158","159","178","179","189","234","235","237","238","239","245","247","248","249","257","258","259","278","279","289","345","347","348","349","357","358","359","378","379","389","457","458","459","478","479","489","578","579","589","789"];
-      }
+      const preset = presetNumberSets[type];
+      if (!preset) return alert("ไม่พบชุดเลขนี้");
+      const items = [...preset.items];
       calcStore.specialNumbers = [];
-      renderCalcBox("specialNumbers", renderCalcSet("specialNumbers", label, items), items.length);
-      showToast(`โหลด ${label} แล้ว`);
+      renderCalcBox("specialNumbers", renderCalcSet("specialNumbers", preset.label, items), items.length);
+      showToast(`โหลด ${preset.label} แล้ว`);
     }
 
     function renderAdmin() {
       renderAdminStats();
       renderPendingSlips();
-      renderPasswordRequests();
       renderMembers();
       renderPackages();
       renderCoupons();
@@ -1303,15 +917,13 @@
       const incomeToday = approved.filter(p => (p.approvedAt || "").startsWith(today)).reduce((s,p) => s + p.amount, 0);
       const incomeMonth = approved.filter(p => (p.approvedAt || "").startsWith(thisMonth)).reduce((s,p) => s + p.amount, 0);
       const pending = payments.filter(p => p.status === "pending").length;
-      const pendingResets = passwordRequests.filter(req => req.status === "pending").length;
       const expireToday = members.filter(u => memberStatus(u) === "active" && daysLeft(u.expire) === 0).length;
       const expire3 = members.filter(u => memberStatus(u) === "active" && daysLeft(u.expire) >= 0 && daysLeft(u.expire) <= 3).length;
       const nearExpire = members.filter(u => memberStatus(u) === "active" && daysLeft(u.expire) >= 0 && daysLeft(u.expire) <= 7).length;
       const best = bestPackageName();
-      document.getElementById("adminBell").textContent = `🔔 ${pending + pendingResets + nearExpire}`;
+      document.getElementById("adminBell").textContent = `🔔 ${pending + nearExpire}`;
       document.getElementById("adminNotices").innerHTML = `
         <div class="notice-card blue">🔔 สลิปใหม่ <strong>${pending}</strong> รายการ</div>
-        <div class="notice-card">🔐 ลืมรหัสผ่าน <strong>${pendingResets}</strong> รายการ</div>
         <div class="notice-card">🟠 ใกล้หมดอายุ 7 วัน <strong>${nearExpire}</strong> คน</div>
         <div class="notice-card red">🔴 หมดอายุวันนี้ <strong>${expireToday}</strong> คน</div>`;
       document.getElementById("adminStats").innerHTML = `
@@ -1367,46 +979,6 @@
       document.getElementById("pendingSlipRows").innerHTML = rows.map(p => `
         <tr><td>${p.createdAt}</td><td>${p.username}</td><td>${getPackage(p.packageId)?.name || "-"}</td><td>${p.amount.toLocaleString()}฿</td><td>${renderSlipCell(p)}</td>
         <td><button class="btn small green" onclick="approvePayment('${p.id}')">อนุมัติ</button> <button class="btn small red" onclick="rejectPayment('${p.id}')">ไม่อนุมัติ</button> <button class="btn small gray" onclick="deletePayment('${p.id}')">ลบ</button></td></tr>`).join("") || "<tr><td colspan='6'>ไม่มีสลิปรออนุมัติ</td></tr>";
-    }
-
-    function renderPasswordRequests() {
-      const sorted = passwordRequests.slice().sort((a, b) => {
-        if (a.status === b.status) return 0;
-        return a.status === "pending" ? -1 : 1;
-      });
-      document.getElementById("passwordRequestRows").innerHTML = sorted.map(req => `
-        <tr>
-          <td>${req.createdAt || "-"}</td>
-          <td>${req.username || "-"}</td>
-          <td>${req.phone || "-"}</td>
-          <td>${req.line || "-"}</td>
-          <td><span class="badge ${req.status === "done" ? "active" : "pending"}">${req.status === "done" ? "จัดการแล้ว" : "รอดำเนินการ"}</span></td>
-          <td>
-            <button class="btn small green" onclick="finishPasswordRequest('${req.id}')">จัดการแล้ว</button>
-            <button class="btn small red" onclick="deletePasswordRequest('${req.id}')">ลบ</button>
-          </td>
-        </tr>`).join("") || "<tr><td colspan='6'>ยังไม่มีคำขอลืมรหัสผ่าน</td></tr>";
-    }
-
-    function finishPasswordRequest(id) {
-      const req = passwordRequests.find(item => item.id === id);
-      if (!req) return;
-      req.status = "done";
-      req.doneAt = new Date().toLocaleString("th-TH");
-      logAdmin(`จัดการคำขอลืมรหัสผ่าน ${req.username}`);
-      saveAll();
-      renderAdmin();
-      showToast("บันทึกว่าจัดการแล้ว");
-    }
-
-    function deletePasswordRequest(id) {
-      const req = passwordRequests.find(item => item.id === id);
-      if (!req || !confirm(`ลบคำขอลืมรหัสของ ${req.username} ใช่ไหม?`)) return;
-      passwordRequests = passwordRequests.filter(item => item.id !== id);
-      logAdmin(`ลบคำขอลืมรหัสผ่าน ${req.username}`);
-      saveAll();
-      renderAdmin();
-      showToast("ลบคำขอแล้ว");
     }
 
     function renderSlipCell(payment) {
@@ -1481,7 +1053,6 @@
       const pay = payments.find(p => p.id === id);
       payments = payments.filter(p => p.id !== id);
       if (pay) logAdmin(`ลบรายการสลิป ${pay.username}`);
-      deleteRemotePayment(id);
       saveAll();
       showToast("ลบรายการสลิปแล้ว");
       renderAdmin();
@@ -1492,7 +1063,7 @@
       const rows = Object.values(users).filter(u => u.role !== "admin").filter(u => `${u.username} ${u.name} ${u.phone} ${u.line}`.toLowerCase().includes(keyword));
       document.getElementById("memberRows").innerHTML = rows.map(u => `
         <tr><td><button class="member-link" onclick="openMemberDetail('${u.username}')">${u.username}</button></td><td>${u.name || "-"}</td><td>${u.phone || "-"}</td><td>${u.line || "-"}</td><td>${getPackage(u.packageId)?.name || "-"}</td><td>${u.expire || "-"}</td><td><span class="badge ${memberStatus(u)}">${memberStatus(u)}</span></td>
-        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small" onclick="resetMemberDevice('${u.username}')">ปลดเครื่อง</button> <button class="btn small gray" onclick="suspendMember('${u.username}')">ระงับ</button> <button class="btn small red" onclick="deleteMember('${u.username}')">ลบ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
+        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small red" onclick="suspendMember('${u.username}')">ระงับ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
     }
 
     function openMemberDetail(username) {
@@ -1515,7 +1086,6 @@
             <div>แพ็กเกจ: ${getPackage(user.packageId)?.name || "-"}</div>
             <div>หมดอายุ: ${user.expire || "-"}</div>
             <div>สถานะ: ${memberStatus(user)}</div>
-            <div>เครื่องที่ผูก: ${user.deviceId ? "ผูกแล้ว" : "ยังไม่ผูกเครื่อง"}</div>
             <div>เครดิตแนะนำเพื่อน: ${user.credit || 0} บาท</div>
             <div>ลิงก์ส่วนตัว: ?ref=${user.refCode || username}</div>
           </div></div>
@@ -1537,7 +1107,7 @@
       const u = users[username];
       document.getElementById("adminUsername").value = u.username;
       document.getElementById("adminUsername").disabled = true;
-      document.getElementById("adminPassword").value = "";
+      document.getElementById("adminPassword").value = u.password;
       document.getElementById("adminName").value = u.name || "";
       document.getElementById("adminPhone").value = u.phone || "";
       document.getElementById("adminLine").value = u.line || "";
@@ -1547,15 +1117,11 @@
     }
 
     function saveMemberFromAdmin() {
-      const username = normalizeUsername(document.getElementById("adminUsername").value);
+      const username = document.getElementById("adminUsername").value.trim();
       const password = document.getElementById("adminPassword").value.trim();
-      if (!username) return alert("กรุณากรอก username");
-      if (!/^[a-zA-Z0-9_-]+$/.test(username)) return alert("Username ใช้ได้เฉพาะอังกฤษ ตัวเลข _ และ -");
-      const editingLockedUser = document.getElementById("adminUsername").disabled;
-      const duplicatedKey = findUsernameKey(username);
-      if (!editingLockedUser && duplicatedKey) return alert("Username นี้ถูกใช้แล้ว");
+      if (!username || !password) return alert("กรุณากรอก username และ password");
       users[username] = {
-        username, role: "member",
+        username, password, role: "member",
         name: document.getElementById("adminName").value.trim(),
         phone: document.getElementById("adminPhone").value.trim(),
         line: document.getElementById("adminLine").value.trim(),
@@ -1593,33 +1159,6 @@
       users[username].status = "suspended";
       logAdmin(`ระงับบัญชี ${username}`);
       saveAll(); renderAdmin(); showToast("ระงับบัญชีแล้ว");
-    }
-
-    function resetMemberDevice(username) {
-      if (!users[username]) return;
-      const ok = confirm(`ปลดเครื่องของ ${username} ใช่ไหม?\n\nหลังปลดแล้ว ลูกค้าจะล็อกอินด้วยเครื่องใหม่ได้ 1 เครื่อง`);
-      if (!ok) return;
-      users[username].deviceId = "";
-      logAdmin(`ปลดเครื่อง ${username}`);
-      saveAll();
-      renderAdmin();
-      showToast("ปลดเครื่องแล้ว");
-    }
-
-    async function deleteMember(username) {
-      if (users[username]?.role === "admin") return alert("ลบแอดมินหลักไม่ได้");
-      const ok = confirm(`ต้องการลบสมาชิก ${username} ใช่ไหม?\n\nระบบจะลบข้อมูลสมาชิกและประวัติสลิปของคนนี้ออกจากหลังบ้าน`);
-      if (!ok) return;
-      const relatedPayments = payments.filter(payment => payment.username === username);
-      const relatedIds = relatedPayments.map(payment => payment.id);
-      payments = payments.filter(payment => payment.username !== username);
-      delete users[username];
-      await deleteRemotePayments(relatedIds);
-      logAdmin(`ลบสมาชิก ${username} และรายการสลิป ${relatedIds.length} รายการ`);
-      saveAll();
-      clearAdminMemberForm();
-      renderAdmin();
-      showToast("ลบสมาชิกแล้ว");
     }
 
     function renderCoupons() {
@@ -1694,55 +1233,15 @@
         renderLanding();
         renderNav();
         setAuthTab("login");
-        history.replaceState({ page: "landingPage" }, "", "#landingPage");
         return;
       }
 
       currentUser = users[savedUsername];
       setAuthTab("login");
-      const hashPage = pageFromHash();
-      const fallbackPage = currentUser.role === "admin" ? "adminPage" : "memberPage";
-      const allowedPage = currentUser.role === "admin"
-        ? (hashPage === "adminPage" ? hashPage : fallbackPage)
-        : (["memberPage", "profilePage", "renewPage", "paymentHistoryPage"].includes(hashPage) ? hashPage : fallbackPage);
-      history.replaceState({ page: allowedPage }, "", `#${allowedPage}`);
-      showPageFromHistory(allowedPage);
+      showPage(currentUser.role === "admin" ? "adminPage" : "memberPage");
     }
 
-    function waitForAuthReady() {
-      return new Promise(resolve => {
-        const stop = auth.onAuthStateChanged(user => {
-          stop();
-          resolve(user);
-        });
-      });
-    }
-
-    async function startApp() {
-      const authUser = await waitForAuthReady();
-      if (authUser) await loadRemoteData();
-      restoreSession();
-    }
-
-    window.addEventListener("popstate", () => {
-      const hashPage = pageFromHash();
-      if (!hashPage) return;
-      if (!currentUser && hashPage !== "landingPage" && hashPage !== "authPage") {
-        showPageFromHistory("landingPage");
-        return;
-      }
-      if (currentUser?.role === "admin" && hashPage !== "adminPage") {
-        showPageFromHistory("adminPage");
-        return;
-      }
-      if (currentUser?.role === "member" && !["memberPage", "profilePage", "renewPage", "paymentHistoryPage"].includes(hashPage)) {
-        showPageFromHistory("memberPage");
-        return;
-      }
-      showPageFromHistory(hashPage);
-    });
-
-    startApp();
+    restoreSession();
   </script>
 </body>
 </html>

@@ -1072,7 +1072,7 @@
       const rows = Object.values(users).filter(u => u.role !== "admin").filter(u => `${u.username} ${u.name} ${u.phone} ${u.line}`.toLowerCase().includes(keyword));
       document.getElementById("memberRows").innerHTML = rows.map(u => `
         <tr><td><button class="member-link" onclick="openMemberDetail('${u.username}')">${u.username}</button></td><td>${u.name || "-"}</td><td>${u.phone || "-"}</td><td>${u.line || "-"}</td><td>${getPackage(u.packageId)?.name || "-"}</td><td>${u.expire || "-"}</td><td><span class="badge ${memberStatus(u)}">${memberStatus(u)}</span></td>
-        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small red" onclick="suspendMember('${u.username}')">ระงับ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
+        <td><button class="btn small green" onclick="editMember('${u.username}')">แก้ไข</button> <button class="btn small gold" onclick="renewMember('${u.username}')">ต่ออายุ</button> <button class="btn small red" onclick="suspendMember('${u.username}')">ระงับ</button> <button class="btn small gray" onclick="deleteMember('${u.username}')">ลบ</button></td></tr>`).join("") || "<tr><td colspan='8'>ไม่พบสมาชิก</td></tr>";
     }
 
     function openMemberDetail(username) {
@@ -1168,6 +1168,22 @@
       users[username].status = "suspended";
       logAdmin(`ระงับบัญชี ${username}`);
       saveAll(); renderAdmin(); showToast("ระงับบัญชีแล้ว");
+    }
+    function deleteMember(username) {
+      const user = users[username];
+      if (!user || user.role === "admin") return alert("ไม่สามารถลบบัญชีนี้ได้");
+      if (!confirm(`ยืนยันลบสมาชิก ${username} และประวัติชำระเงินทั้งหมดของสมาชิกนี้?`)) return;
+      delete users[username];
+      payments = payments.filter(payment => payment.username !== username);
+      if (currentUser?.username === username) {
+        currentUser = null;
+        localStorage.removeItem("rn_current_user");
+      }
+      logAdmin(`ลบสมาชิก ${username}`);
+      saveAll();
+      clearAdminMemberForm();
+      renderAdmin();
+      showToast("ลบสมาชิกแล้ว");
     }
 
     function renderCoupons() {
